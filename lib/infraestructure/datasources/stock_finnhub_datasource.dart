@@ -17,7 +17,7 @@ class StockFinnhubDatasource extends StockDatasource{
   ));
 
   @override
-  Future<StockPrice> getStockPrice() async{
+  Future<StockPrice> getStockPrice() async{ // TODO: pasarle argumento de nombre del symbol que la persona desee
     final response = await dio.get('/quote',
     queryParameters: {
       'symbol': 'GOOGL'
