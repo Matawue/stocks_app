@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stocks_app/domain/entities/stock_price.dart';
 import 'package:stocks_app/presentation/providers/stocks/stocks_repository_provider.dart';
-import 'package:stocks_app/presentation/widgets/shared/custom_bottom_navigation.dart';
 
 
 final FutureProvider<StockPrice> stockPriceFromProvider =
@@ -30,7 +29,6 @@ class HomeView extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator(strokeWidth: 2,),),
       ),
 
-      bottomNavigationBar: const CustomBottomNavigation(),
     );
   }
 }

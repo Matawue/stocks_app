@@ -35,7 +35,9 @@ final goRouter = GoRouter(
 
       builder: (context, state, StatefulNavigationShell navigationShell) {
         return HomeScreen(
-
+          childView: navigationShell,
+          goBranch: navigationShell.goBranch,
+          getCurrentIndex: navigationShell.currentIndex,
         );
       }
     )

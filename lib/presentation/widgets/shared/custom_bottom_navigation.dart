@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
-
+typedef GoBranchCallBack = void Function(int index);
 
 class CustomBottomNavigation extends StatelessWidget {
-  selectedIndex = 0;
-  const CustomBottomNavigation({super.key});
+
+  final GoBranchCallBack goBranch;
+  final int currentIndex;
+
+  const CustomBottomNavigation({
+    super.key, 
+    required this.goBranch, 
+    required this.currentIndex
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,11 +24,10 @@ class CustomBottomNavigation extends StatelessWidget {
 
       elevation: 0,
       type: BottomNavigationBarType.fixed,
-      currentIndex: selectedIndex,
+      currentIndex: currentIndex,
 
       onTap: (value) {
-        selectedIndex = value;
-        context.go('/$value');
+        goBranch(value);
       },
 
       selectedItemColor: colors.primary,
@@ -30,18 +35,16 @@ class CustomBottomNavigation extends StatelessWidget {
       
 
       
-      items: [
+      items: const[
         BottomNavigationBarItem(
           icon: Icon(Icons.motorcycle_outlined),
           activeIcon: Icon(Icons.motorcycle),
           label: 'Moto',
-          backgroundColor: colors.primary
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person),
           activeIcon: Icon(Icons.person_2),
           label: 'Persona',
-          backgroundColor: colors.tertiary
         ),
       ],
     );

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:stocks_app/presentation/widgets/shared/custom_bottom_navigation.dart';
 
 
 
@@ -14,7 +13,6 @@ class MyPortafolioView extends StatelessWidget {
       ),
 
       body: const Center(child: Text(':)'),),
-      bottomNavigationBar: const CustomBottomNavigation(),
     );
   }
 }
