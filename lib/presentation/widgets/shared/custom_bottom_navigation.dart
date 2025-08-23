@@ -32,19 +32,18 @@ class CustomBottomNavigation extends StatelessWidget {
 
       selectedItemColor: colors.primary,
       unselectedItemColor: Colors.grey,
-      
+      //selectedIconTheme: IconThemeData(size: 26),
+      unselectedFontSize: 14.0,
 
       
       items: const[
         BottomNavigationBarItem(
-          icon: Icon(Icons.motorcycle_outlined),
-          activeIcon: Icon(Icons.motorcycle),
-          label: 'Moto',
+          icon: Icon(Icons.home_outlined),
+          label: 'Inicio',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          activeIcon: Icon(Icons.person_2),
-          label: 'Persona',
+          icon: Icon(Icons.business_center_outlined),
+          label: 'Portafolio',
         ),
       ],
     );

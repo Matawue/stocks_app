@@ -1,5 +1,5 @@
 
-class StockFinnhubResponse {
+class StockPriceFinnhubResponse {
     final double c;
     final double d;
     final double dp;
@@ -9,7 +9,7 @@ class StockFinnhubResponse {
     final double pc;
     final int t;
 
-    StockFinnhubResponse({
+    StockPriceFinnhubResponse({
         required this.c,
         required this.d,
         required this.dp,
@@ -20,7 +20,7 @@ class StockFinnhubResponse {
         required this.t,
     });
 
-    factory StockFinnhubResponse.fromJson(Map<String, dynamic> json) => StockFinnhubResponse(
+    factory StockPriceFinnhubResponse.fromJson(Map<String, dynamic> json) => StockPriceFinnhubResponse(
         c: json["c"]?.toDouble(),
         d: json["d"]?.toDouble(),
         dp: json["dp"]?.toDouble(),
