@@ -13,8 +13,8 @@ class StockRepositoryImpl extends StockRepository{
 
 
   @override
-  Future<StockPrice> getStockPrice() {
-    return datasource.getStockPrice();
+  Future<StockPrice> getStockPrice(String symbol) {
+    return datasource.getStockPrice(symbol);
   }
 
   @override

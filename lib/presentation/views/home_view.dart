@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:stocks_app/domain/entities/stock_price.dart';
-import 'package:stocks_app/presentation/providers/stocks/stocks_repository_provider.dart';
 
 
-final FutureProvider<StockPrice> stockPriceFromProvider =
-FutureProvider(( ref ) async{
-  return ref.watch(stockRepositoryProvider).getStockPrice();
-});
+
 
 class HomeView extends ConsumerWidget {
   const HomeView({super.key});
@@ -15,7 +10,7 @@ class HomeView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    final stockPrice = ref.watch(stockPriceFromProvider);
+    //final stockPrice = ref.watch(stockPriceFromProvider);
 
 
     return Scaffold(
@@ -23,11 +18,13 @@ class HomeView extends ConsumerWidget {
         title: const Center(child: Text('Google')),
       ),
 
-      body: stockPrice.when(
-        data: (data) => Center(child: Text('Precio de la accion: ${data.currentPrice}', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 25),)), 
-        error: (_ , __) => const Center(child: Text('No se ha pordido cargar el precio de la accion'),), 
-        loading: () => const Center(child: CircularProgressIndicator(strokeWidth: 2,),),
-      ),
+      body: const Center(child: Text('Bienvenido')) 
+      
+      //stockPrice.when(
+      //  data: (data) => Center(child: Text('Precio de la accion: ${data.currentPrice}', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 25),)), 
+      //  error: (_ , __) => const Center(child: Text('No se ha pordido cargar el precio de la accion'),), 
+      //  loading: () => const Center(child: CircularProgressIndicator(strokeWidth: 2,),),
+      //),
 
     );
   }

@@ -19,10 +19,10 @@ class StockFinnhubDatasource extends StockDatasource{
   ));
 
   @override
-  Future<StockPrice> getStockPrice() async{ // TODO: pasarle argumento de nombre del symbol que la persona desee
+  Future<StockPrice> getStockPrice(String symbol) async{ // TODO: pasarle argumento de nombre del symbol que la persona desee
     final response = await dio.get('/quote',
     queryParameters: {
-      'symbol': 'GOOGL'
+      'symbol': symbol
     });
 
     final stockPriceResponse = StockPriceFinnhubResponse.fromJson(response.data);
@@ -44,10 +44,10 @@ class StockFinnhubDatasource extends StockDatasource{
 
     final List<dynamic> data = response.data;
 
-    final List<StockFinnhubResponse> stockResponse = data
+    final stockResponse = data
     .map(
       (json) => StockFinnhubResponse.fromJson(json)
-    ).toList();
+    );
     
     final List<Stock> stock = stockResponse.map(
       (stockFinnhub) => StockMapper.stockFinnhubToEntity(stockFinnhub)

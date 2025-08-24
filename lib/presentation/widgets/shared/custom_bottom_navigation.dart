@@ -45,6 +45,10 @@ class CustomBottomNavigation extends StatelessWidget {
           icon: Icon(Icons.business_center_outlined),
           label: 'Portafolio',
         ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.search),
+          label: 'Descubrir',
+        ),
       ],
     );
   }

@@ -16,7 +16,16 @@ final goRouter = GoRouter(
             GoRoute(
               path: '/',
               builder: (context, state) => const HomeView(),
-              // TODO: aqui deberia ir el stockScreen cuando exista
+              routes: [
+                GoRoute(
+                  path: 'stock/:symbol',
+                  builder: (context, state) {
+                    final symbol = state.pathParameters['symbol'] ?? 'no-symbol';
+
+                    return StockScreen(symbol: symbol);
+                  }, 
+                )
+              ]
             ),
           ]
         ),
@@ -28,7 +37,16 @@ final goRouter = GoRouter(
               builder: (context, state) => const MyPortafolioView() 
             )
           ]
-        )
+        ),
+
+        StatefulShellBranch(
+          routes: <RouteBase>[
+            GoRoute(
+              path: '/descubrir',
+              builder: (context, state) => const DiscoverStocksView(),
+            )
+          ]
+        ),
 
       ],
 
