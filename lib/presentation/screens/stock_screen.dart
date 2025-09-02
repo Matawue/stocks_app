@@ -24,6 +24,9 @@ class StockScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(symbol),
+        actions: [
+          Image.network('https://images.financialmodelingprep.com/symbol/$symbol.png')
+        ],
       ),
 
       body: stockPrice.when(

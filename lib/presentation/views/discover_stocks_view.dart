@@ -1,40 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:stocks_app/domain/entities/entities.dart';
-import 'package:stocks_app/presentation/providers/stocks/stocks_repository_provider.dart';
+import 'package:stocks_app/presentation/providers/stocks/stocks_provider.dart';
+import 'package:stocks_app/presentation/widgets/stocks/stock_horizontal_listview.dart';
 
 
 
-final FutureProvider<List<Stock>> stockListProvider = 
-FutureProvider((ref) async{
-  final stockRepository = ref.watch(stockRepositoryProvider);
-  return stockRepository.getStock();
-});
 
-class DiscoverStocksView extends ConsumerWidget {
+
+class DiscoverStocksView extends ConsumerStatefulWidget {
   const DiscoverStocksView({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final stockList = ref.watch(stockListProvider);
-    return Scaffold(
+  ConsumerState<DiscoverStocksView> createState() => _DiscoverStocksViewState();
+}
+
+class _DiscoverStocksViewState extends ConsumerState<DiscoverStocksView> {
+
+  @override
+  void initState() {
+    super.initState();
+    ref.read(getStocksProvider.notifier).loadNextPage();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+
+    final stocks = ref.watch(getStocksProvider)
+;    return Scaffold(
       appBar: AppBar(
         title: const Text('My Portafolio'),
       ),
 
-      body: stockList.when(
-        data: (stocks) => ListView.builder(
-          itemCount: stocks.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              leading: Text(stocks[index].name),
-              onTap: () => context.push('/stock/${stocks[index].symbol}'),
-            );
-          }
-        ), 
-        error: (_, __) => const Text('Algo ha salido mal'), 
-        loading: () => const Center(child: CircularProgressIndicator(strokeWidth: 2,),)
+      body: (stocks.isEmpty)
+      ? Center(child: CircularProgressIndicator(strokeWidth: 2,),)
+
+      :Column(
+        children: [
+          StockHorizontalListview(
+            stocks: stocks, 
+            title: 'New York stocks'
+          )
+        ],
       )
     );
   }

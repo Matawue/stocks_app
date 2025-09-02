@@ -18,6 +18,10 @@ class StockFinnhubDatasource extends StockDatasource{
     }
   ));
 
+  //final dioImage = Dio(BaseOptions(
+  //  baseUrl: 'https://images.financialmodelingprep.com/symbol'
+  //));
+
   @override
   Future<StockPrice> getStockPrice(String symbol) async{ // TODO: pasarle argumento de nombre del symbol que la persona desee
     final response = await dio.get('/quote',
@@ -42,14 +46,19 @@ class StockFinnhubDatasource extends StockDatasource{
       'currency': 'USD'
     });
 
-    final List<dynamic> data = response.data;
+    final List<Map<String, dynamic>> data = response.data;
 
     final stockResponse = data
     .map(
       (json) => StockFinnhubResponse.fromJson(json)
     );
     
-    final List<Stock> stock = stockResponse.map(
+    final List<Stock> stock = stockResponse
+    //quiero que si la llamada a la imagen su respuesta es de 200(Existosa) si se mapee, por el contrario, no me interesa
+    //Pienso que tendre que poner un metodo tanto en el datasource como en el repository para esto
+    //.where(
+      //algo asi (stockFinnhub) => responseImage = dioImage.get('/${stockFinnhub.symbol}.png'))
+    .map(
       (stockFinnhub) => StockMapper.stockFinnhubToEntity(stockFinnhub)
     ).toList();
 

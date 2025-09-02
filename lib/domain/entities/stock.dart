@@ -4,13 +4,15 @@ class Stock {
   final String name;
   final String symbol;
   final String type; // Tipo de stock
+  final String image;
 
   Stock({
     required this.currency, 
     required this.stockMarket, 
     required this.name, 
     required this.symbol, 
-    required this.type
+    required this.type,
+    this.image = 'No hay imagen'
   });  
 
 

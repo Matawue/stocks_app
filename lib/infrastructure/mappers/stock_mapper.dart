@@ -8,5 +8,6 @@ class StockMapper {
     name: stockFinnhub.description,
     symbol: stockFinnhub.symbol,
     type: stockFinnhub.type,
+    image: 'https://images.financialmodelingprep.com/symbol/${stockFinnhub.symbol}.png'
   );
 }
