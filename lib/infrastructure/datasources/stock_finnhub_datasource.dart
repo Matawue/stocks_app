@@ -18,9 +18,9 @@ class StockFinnhubDatasource extends StockDatasource{
     }
   ));
 
-  //final dioImage = Dio(BaseOptions(
-  //  baseUrl: 'https://images.financialmodelingprep.com/symbol'
-  //));
+  final dioImage = Dio(BaseOptions(
+    baseUrl: 'https://images.financialmodelingprep.com/symbol'
+  ));
 
   @override
   Future<StockPrice> getStockPrice(String symbol) async{ // TODO: pasarle argumento de nombre del symbol que la persona desee
@@ -30,7 +30,7 @@ class StockFinnhubDatasource extends StockDatasource{
     });
 
     final stockPriceResponse = StockPriceFinnhubResponse.fromJson(response.data);
-    final StockPrice stockPrice = StockPriceMapper.stockPriceFinnhubToEntity(stockPriceResponse); 
+    final StockPrice stockPrice = StockPriceMapper.stockPriceFinnhubToEntity(stockPriceResponse);
 
 
     return stockPrice;
@@ -46,24 +46,45 @@ class StockFinnhubDatasource extends StockDatasource{
       'currency': 'USD'
     });
 
-    final List<Map<String, dynamic>> data = response.data;
+    final List<dynamic> data = response.data;
 
     final stockResponse = data
     .map(
       (json) => StockFinnhubResponse.fromJson(json)
     );
+
+    final filteredStock = <StockFinnhubResponse>[];
+
+    for(final stockFinnhub in stockResponse){
+      if(await hasImageBySymbol(stockFinnhub.symbol)){
+        filteredStock.add(stockFinnhub);
+      }
+    }
     
-    final List<Stock> stock = stockResponse
+    final List<Stock> stock = filteredStock
     //quiero que si la llamada a la imagen su respuesta es de 200(Existosa) si se mapee, por el contrario, no me interesa
     //Pienso que tendre que poner un metodo tanto en el datasource como en el repository para esto
     //.where(
-      //algo asi (stockFinnhub) => responseImage = dioImage.get('/${stockFinnhub.symbol}.png'))
+    //  (stockFinnhub) => (hasImageBySymbol(stockFinnhub.symbol)) 
+    //)
     .map(
       (stockFinnhub) => StockMapper.stockFinnhubToEntity(stockFinnhub)
     ).toList();
 
     
     return stock;
+  }
+  
+  @override
+  Future<bool> hasImageBySymbol(String symbol) async{
+   try {
+      final response = await dioImage.get('/$symbol.png');
+      return response.statusCode == 200;
+    } on DioException catch (e) {
+    if (e.response?.statusCode == 404) return false;
+    if(e.response?.statusCode != 200) return false;
+    rethrow; // otros errores, relanza la excepción
+  }
   }
 
 }

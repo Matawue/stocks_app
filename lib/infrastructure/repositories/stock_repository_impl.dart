@@ -21,5 +21,11 @@ class StockRepositoryImpl extends StockRepository{
   Future<List<Stock>> getStock({String marketIdentifierCode = 'XNYS'}) {
     return datasource.getStock();
   }
+  
+  @override
+  Future<bool> hasImageBySymbol(String symbol) {
+    return datasource.hasImageBySymbol(symbol);
+  }
+  
 
 }

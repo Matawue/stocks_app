@@ -8,6 +8,8 @@ abstract class StockDatasource {
   
   Future<List<Stock>> getStock({String marketIdentifierCode = 'XNYS'});
 
+  Future<bool> hasImageBySymbol(String symbol);
+
   
 
 }
