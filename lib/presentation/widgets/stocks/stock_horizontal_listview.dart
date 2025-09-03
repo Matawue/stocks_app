@@ -3,7 +3,7 @@ import 'package:stocks_app/domain/entities/entities.dart';
 
 
 
-class StockHorizontalListview extends StatelessWidget {
+class StockHorizontalListview extends StatefulWidget {
   final List<Stock> stocks;
   final VoidCallback? loadNextPage;
   final String title;
@@ -16,23 +16,52 @@ class StockHorizontalListview extends StatelessWidget {
   });
 
   @override
+  State<StockHorizontalListview> createState() => _StockHorizontalListviewState();
+}
+
+class _StockHorizontalListviewState extends State<StockHorizontalListview> {
+
+  final scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(() {
+      if(widget.loadNextPage == null) return;
+      if(scrollController.position.pixels >= scrollController.position.maxScrollExtent) {
+        widget.loadNextPage!();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).textTheme.bodyLarge;
     return SizedBox(height: 250,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 20,),
-          Text(title, style: textStyle,),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Text(widget.title, style: textStyle,),
+          ),
           SizedBox(height: 15,),
 
           
           Expanded(
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: stocks.length,
+              itemCount: widget.stocks.length,
+              controller: scrollController,
               itemBuilder: (context, index) {
                 
-                return _StocksSwipe(stock: stocks[index]);
+                return _StocksSwipe(stock: widget.stocks[index]);
               }
             ),
           )
@@ -52,20 +81,42 @@ class _StocksSwipe extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).textTheme.titleLarge;
+    
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 8),
+      width: 130,
+      margin: EdgeInsets.symmetric(horizontal: 10,),
+      padding: EdgeInsets.symmetric(vertical: 15),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.grey
+      ),
+      
 
-      child: SizedBox(
-        width: 150,
-        child: ClipRRect(
-          borderRadius: BorderRadiusGeometry.circular(20),
-          child: Column(
-            children: [
-              // TODO: Poner imagen del stock, gesture detector y el symbol del stock
-              Placeholder()
-            ],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 100,
+            height: 100,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              child: ClipOval(
+                child: Image.network(
+                  stock.image,
+                ),
+              ),
+            ),
           ),
-        ),
+          SizedBox(height: 10,),
+
+          SizedBox(
+            width: 100,
+            child: Center(child: Text(stock.symbol, style: textStyle,)),
+          )
+
+
+        ],
       )
         
     );

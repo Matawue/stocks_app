@@ -53,20 +53,15 @@ class StockFinnhubDatasource extends StockDatasource{
       (json) => StockFinnhubResponse.fromJson(json)
     );
 
-    final filteredStock = <StockFinnhubResponse>[];
-
-    for(final stockFinnhub in stockResponse){
-      if(await hasImageBySymbol(stockFinnhub.symbol)){
-        filteredStock.add(stockFinnhub);
-      }
-    }
+    final results = await Future.wait(
+      stockResponse.map((stockFinnhub) async {
+        final hasImage = await hasImageBySymbol(stockFinnhub.symbol);
+        return hasImage ? stockFinnhub : null;
+      })
+    );
+    final filteredStock = results.whereType<StockFinnhubResponse>();
     
     final List<Stock> stock = filteredStock
-    //quiero que si la llamada a la imagen su respuesta es de 200(Existosa) si se mapee, por el contrario, no me interesa
-    //Pienso que tendre que poner un metodo tanto en el datasource como en el repository para esto
-    //.where(
-    //  (stockFinnhub) => (hasImageBySymbol(stockFinnhub.symbol)) 
-    //)
     .map(
       (stockFinnhub) => StockMapper.stockFinnhubToEntity(stockFinnhub)
     ).toList();

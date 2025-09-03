@@ -39,7 +39,8 @@ class _DiscoverStocksViewState extends ConsumerState<DiscoverStocksView> {
         children: [
           StockHorizontalListview(
             stocks: stocks, 
-            title: 'New York stocks'
+            title: 'New York stocks',
+            loadNextPage: () => ref.read(getStocksProvider.notifier).loadNextPage(),
           )
         ],
       )
