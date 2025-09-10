@@ -68,7 +68,7 @@ class StocksNotifier extends StateNotifier<List<Stock>> {
     currentPage++;
 
     state = [...state, ...tempStocksList];
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 3));
     isLoading = false;
 
   }

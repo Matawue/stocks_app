@@ -35,7 +35,7 @@ class _DiscoverStocksViewState extends ConsumerState<DiscoverStocksView> {
         title: const Text('My Portafolio'),
         actions: [
           IconButton(
-            onPressed: ()=>{},
+            onPressed: (){},
             icon: Icon(Icons.search_rounded)
           )
         ],
