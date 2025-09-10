@@ -18,8 +18,8 @@ class StockRepositoryImpl extends StockRepository{
   }
 
   @override
-  Future<List<Stock>> getStock({String marketIdentifierCode = 'XNYS'}) {
-    return datasource.getStock();
+  Future<void> getStock({String marketIdentifierCode = 'XNYS', required void Function(Stock) onStockFound}) {
+    return datasource.getStock(onStockFound: onStockFound);
   }
   
   @override

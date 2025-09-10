@@ -19,7 +19,7 @@ class _DiscoverStocksViewState extends ConsumerState<DiscoverStocksView> {
   @override
   void initState() {
     super.initState();
-    ref.read(getStocksProvider.notifier).loadNextPage();
+    ref.read(getStocksProvider.notifier).loadStocksIncremental();
   }
 
 

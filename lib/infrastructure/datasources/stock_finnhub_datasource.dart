@@ -1,6 +1,7 @@
 
 
 import 'package:dio/dio.dart';
+import 'package:pool/pool.dart';
 import 'package:stocks_app/config/constants/environment.dart';
 import 'package:stocks_app/domain/datasources/stock_datasource.dart';
 import 'package:stocks_app/infrastructure/mappers/stock_mapper.dart';
@@ -38,13 +39,14 @@ class StockFinnhubDatasource extends StockDatasource{
   }
 
   @override
-  Future<List<Stock>> getStock({String marketIdentifierCode = 'XNYS'}) async{
+  Future<void> getStock({String marketIdentifierCode = 'XNYS', required void Function(Stock) onStockFound,}) async{
     final response = await dio.get('/stock/symbol',
     queryParameters: {
       'exchange': 'US',
       'mic': marketIdentifierCode,
       'currency': 'USD'
     });
+    
 
     final List<dynamic> data = response.data;
 
@@ -53,21 +55,21 @@ class StockFinnhubDatasource extends StockDatasource{
       (json) => StockFinnhubResponse.fromJson(json)
     );
 
-    final results = await Future.wait(
-      stockResponse.map((stockFinnhub) async {
-        final hasImage = await hasImageBySymbol(stockFinnhub.symbol);
-        return hasImage ? stockFinnhub : null;
-      })
-    );
-    final filteredStock = results.whereType<StockFinnhubResponse>();
-    
-    final List<Stock> stock = filteredStock
-    .map(
-      (stockFinnhub) => StockMapper.stockFinnhubToEntity(stockFinnhub)
-    ).toList();
+    final pool = Pool(5);
 
-    
-    return stock;
+
+    for(final stockFinnhub in stockResponse) {
+      pool.withResource(() async {
+        final hasImage = await hasImageBySymbol(stockFinnhub.symbol);
+        if(hasImage) {
+          final stock = StockMapper.stockFinnhubToEntity(stockFinnhub); 
+          onStockFound(stock);
+        }
+      });
+    }
+    //final filteredStock = results.whereType<StockFinnhubResponse>();
+    await pool.close();
+  
   }
   
   @override

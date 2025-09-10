@@ -14,6 +14,7 @@ dependencies:
   flutter_dotenv: ^5.2.1
   flutter_riverpod: ^2.6.1
   go_router: ^16.2.0
+  pool: ^1.5.1
 
 dev_dependencies:
   flutter_lints: ^5.0.0

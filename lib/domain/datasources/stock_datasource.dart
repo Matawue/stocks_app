@@ -6,7 +6,7 @@ abstract class StockDatasource {
 
   Future<StockPrice> getStockPrice(String symbol);
   
-  Future<List<Stock>> getStock({String marketIdentifierCode = 'XNYS'});
+  Future<void> getStock({String marketIdentifierCode = 'XNYS', required void Function(Stock) onStockFound});
 
   Future<bool> hasImageBySymbol(String symbol);
 

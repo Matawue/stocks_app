@@ -28,7 +28,7 @@ class _StockHorizontalListviewState extends State<StockHorizontalListview> {
     super.initState();
     scrollController.addListener(() {
       if(widget.loadNextPage == null) return;
-      if(scrollController.position.pixels >= scrollController.position.maxScrollExtent) {
+      if(scrollController.position.pixels+100 >= scrollController.position.maxScrollExtent) {
         widget.loadNextPage!();
       }
     });

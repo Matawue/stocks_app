@@ -2,25 +2,20 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stocks_app/domain/entities/entities.dart';
+import 'package:stocks_app/infrastructure/repositories/stock_repository_impl.dart';
 import 'package:stocks_app/presentation/providers/stocks/stocks_repository_provider.dart';
 
 
-final Provider <Future<List<Stock>>> stockListProvider = 
-Provider((ref) async{
-  final stockRepository = ref.watch(stockRepositoryProvider);
-  final stocks = await stockRepository.getStock();
-  return stocks;
-});
 
 final getStocksProvider = StateNotifierProvider<StocksNotifier, List<Stock>>((ref) {
-  final stocks = ref.watch(stockListProvider);
+  final stocks = ref.watch(stockRepositoryProvider);
   return StocksNotifier(
     stocks: stocks
   );
 
 });
 
-typedef StockCallback = Future<List<Stock>>;
+typedef StockCallback = StockRepositoryImpl;
 
 
 class StocksNotifier extends StateNotifier<List<Stock>> {
@@ -28,28 +23,39 @@ class StocksNotifier extends StateNotifier<List<Stock>> {
   bool isLoading = false;
   final StockCallback stocks;
 
+  final List<Stock> _allStocks = [];
+
 
   StocksNotifier({
     required this.stocks
   }) : super([]);
 
-
+  Future<void> loadStocksIncremental() async {
+    _allStocks.clear();
+    await stocks.getStock(
+        onStockFound: (stock) {
+          _allStocks.add(stock);
+          if(_allStocks.length == 10) loadNextPage();
+        },
+      );
+  }
 
   Future<void> loadNextPage() async{
 
     if(isLoading) return;
-    final stocksList = await stocks;
-    if(stocksList.isEmpty) return;
+    
+    if(_allStocks.isEmpty) return;
     isLoading = true;
     int offset = currentPage*10;
-    List<Stock> tempStocksList = []; 
-    for(int i = offset; i<offset+10 && i<stocksList.length; i++){
-      tempStocksList.add(stocksList[i]);
+    List<Stock> tempStocksList = [];
+    //pensando en poner el modulo de 10 de el length para contar
+    for(int i = offset; i<offset+10 && i<_allStocks.length; i++){
+      tempStocksList.add(_allStocks[i]);
     }
     currentPage++;
 
     state = [...state, ...tempStocksList];
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 2));
     isLoading = false;
 
   }
