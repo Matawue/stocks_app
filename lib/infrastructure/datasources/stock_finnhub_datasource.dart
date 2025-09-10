@@ -39,7 +39,7 @@ class StockFinnhubDatasource extends StockDatasource{
   }
 
   @override
-  Future<void> getStock({String marketIdentifierCode = 'XNYS', required void Function(Stock) onStockFound,}) async{
+  Future<void> getStock({required String marketIdentifierCode, required void Function(Stock) onStockFound,}) async{
     final response = await dio.get('/stock/symbol',
     queryParameters: {
       'exchange': 'US',
@@ -55,7 +55,7 @@ class StockFinnhubDatasource extends StockDatasource{
       (json) => StockFinnhubResponse.fromJson(json)
     );
 
-    final pool = Pool(5);
+    final pool = Pool(3);
 
 
     for(final stockFinnhub in stockResponse) {

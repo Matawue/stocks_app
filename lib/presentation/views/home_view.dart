@@ -15,9 +15,10 @@ class HomeView extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Center(child: Text('Google')),
+        title: const Center(child: Text('Buenos días :)')),
       ),
 
+      //TODO: Poner apartado de las ultimas noticias del mercado, hacer un appbar mas dinamico y un drawer creo que se llamaba
       body: const Center(child: Text('Bienvenido')) 
       
       //stockPrice.when(

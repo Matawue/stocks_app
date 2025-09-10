@@ -7,10 +7,20 @@ import 'package:stocks_app/presentation/providers/stocks/stocks_repository_provi
 
 
 
-final getStocksProvider = StateNotifierProvider<StocksNotifier, List<Stock>>((ref) {
+final getStocksFromNYProvider = StateNotifierProvider<StocksNotifier, List<Stock>>((ref) {
   final stocks = ref.watch(stockRepositoryProvider);
   return StocksNotifier(
-    stocks: stocks
+    stocks: stocks,
+    marketIdentifierCode: 'XNYS'
+  );
+
+});
+
+final getStocksFromNASProvider = StateNotifierProvider<StocksNotifier, List<Stock>>((ref) {
+  final stocks = ref.watch(stockRepositoryProvider);
+  return StocksNotifier(
+    stocks: stocks,
+    marketIdentifierCode: 'XNAS'
   );
 
 });
@@ -22,20 +32,23 @@ class StocksNotifier extends StateNotifier<List<Stock>> {
   int currentPage = 0;
   bool isLoading = false;
   final StockCallback stocks;
+  final String marketIdentifierCode;
 
   final List<Stock> _allStocks = [];
 
 
   StocksNotifier({
-    required this.stocks
+    required this.stocks,
+    required this.marketIdentifierCode
   }) : super([]);
 
   Future<void> loadStocksIncremental() async {
     _allStocks.clear();
     await stocks.getStock(
+        marketIdentifierCode: marketIdentifierCode,
         onStockFound: (stock) {
           _allStocks.add(stock);
-          if(_allStocks.length == 10) loadNextPage();
+          if(_allStocks.length == 20) loadNextPage();
         },
       );
   }

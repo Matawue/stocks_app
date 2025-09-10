@@ -6,7 +6,7 @@ abstract class StockRepository {
 
   Future<StockPrice> getStockPrice(String symbol);
 
-  Future<void> getStock({String marketIdentifierCode = 'XNYS', required void Function(Stock) onStockFound});
+  Future<void> getStock({required String marketIdentifierCode, required void Function(Stock) onStockFound});
 
   Future<bool> hasImageBySymbol(String symbol);
 
