@@ -83,5 +83,11 @@ class StockFinnhubDatasource extends StockDatasource{
     rethrow; // otros errores, relanza la excepción
   }
   }
+  
+  @override
+  Future<StockInfo> getStockInfo(String symbol) {
+    // TODO: implement getStockInfo
+    throw UnimplementedError();
+  }
 
 }

@@ -1,5 +1,6 @@
 import 'package:stocks_app/domain/datasources/stock_datasource.dart';
 import 'package:stocks_app/domain/entities/stock.dart';
+import 'package:stocks_app/domain/entities/stock_info.dart';
 import 'package:stocks_app/domain/entities/stock_price.dart';
 import 'package:stocks_app/domain/repositories/stock_repository.dart';
 
@@ -26,6 +27,13 @@ class StockRepositoryImpl extends StockRepository{
   Future<bool> hasImageBySymbol(String symbol) {
     return datasource.hasImageBySymbol(symbol);
   }
+
+  @override
+  Future<StockInfo> getStockInfo(String symbol) {
+    return datasource.getStockInfo(symbol);
+  }
+
+  
   
 
 }

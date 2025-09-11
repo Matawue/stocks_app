@@ -10,6 +10,8 @@ abstract class StockDatasource {
 
   Future<bool> hasImageBySymbol(String symbol);
 
+  Future<StockInfo> getStockInfo(String symbol);
+
   
 
 }

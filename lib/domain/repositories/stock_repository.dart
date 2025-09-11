@@ -10,4 +10,6 @@ abstract class StockRepository {
 
   Future<bool> hasImageBySymbol(String symbol);
 
+  Future<StockInfo> getStockInfo(String symbol);
+
 }
