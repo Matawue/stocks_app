@@ -4,10 +4,12 @@ import 'package:dio/dio.dart';
 import 'package:pool/pool.dart';
 import 'package:stocks_app/config/constants/environment.dart';
 import 'package:stocks_app/domain/datasources/stock_datasource.dart';
+import 'package:stocks_app/infrastructure/mappers/stock_info_mapper.dart';
 import 'package:stocks_app/infrastructure/mappers/stock_mapper.dart';
 import 'package:stocks_app/infrastructure/mappers/stock_price_mapper.dart';
 import 'package:stocks_app/domain/entities/entities.dart';
 import 'package:stocks_app/infrastructure/models/stockfinnhub/stock_finnhub_response.dart';
+import 'package:stocks_app/infrastructure/models/stockfinnhub/stock_info_finnhub_response.dart';
 import 'package:stocks_app/infrastructure/models/stockfinnhub/stock_price_finnhub_response.dart';
 
 class StockFinnhubDatasource extends StockDatasource{
@@ -85,9 +87,20 @@ class StockFinnhubDatasource extends StockDatasource{
   }
   
   @override
-  Future<StockInfo> getStockInfo(String symbol) {
-    // TODO: implement getStockInfo
-    throw UnimplementedError();
+  Future<StockInfo> getStockInfo(String symbol) async{
+    final response = await dio.get(
+      '/stock/profile2',
+      queryParameters: {
+        'symbol': symbol
+      }
+    );
+
+    final stockInfoResponse = StockInfoFinnhubResponse.fromJson(response.data);
+
+    final stockInfo = StockInfoMapper.stockInfoFinnhubToEntity(stockInfoResponse);
+
+    return stockInfo;
+    
   }
 
 }
