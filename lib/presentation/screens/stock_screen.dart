@@ -25,7 +25,7 @@ void openUrl(String url) async {
   final uri = Uri.parse(url);
   final bool canLaunch = await canLaunchUrl(uri); 
   if(canLaunch) {
-    await launchUrl(uri);
+    await launchUrl(uri, mode: LaunchMode.platformDefault);
   } else {
     throw 'No se pudo abrir el enlace';
   }
