@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:stocks_app/domain/entities/entities.dart';
@@ -84,44 +85,46 @@ class _StocksSwipe extends StatelessWidget {
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).textTheme.titleLarge;
     
-    return GestureDetector(
-      onTap: () => context.push('/stock/${stock.symbol}'),
-      child: Container(
-        width: 130,
-        margin: EdgeInsets.symmetric(horizontal: 10,),
-        padding: EdgeInsets.symmetric(vertical: 15),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.grey
-        ),
+    return FadeInRight(
+      child: GestureDetector(
+        onTap: () => context.push('/stock/${stock.symbol}'),
+        child: Container(
+          width: 130,
+          margin: EdgeInsets.symmetric(horizontal: 10,),
+          padding: EdgeInsets.symmetric(vertical: 15),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.grey.shade200
+          ),
+          
         
-      
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 100,
-              height: 100,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                child: ClipOval(
-                  child: Image.network(
-                    stock.image,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 100,
+                height: 100,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  child: ClipOval(
+                    child: Image.network(
+                      stock.image,
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(height: 10,),
-      
-            SizedBox(
-              width: 100,
-              child: Center(child: Text(stock.symbol, style: textStyle,)),
-            )
-      
-      
-          ],
-        )
-          
+              SizedBox(height: 10,),
+        
+              SizedBox(
+                width: 100,
+                child: Center(child: Text(stock.symbol, style: textStyle,)),
+              )
+        
+        
+            ],
+          )
+            
+        ),
       ),
     );
    
