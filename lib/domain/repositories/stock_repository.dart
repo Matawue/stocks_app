@@ -12,4 +12,6 @@ abstract class StockRepository {
 
   Future<StockInfo> getStockInfo(String symbol);
 
+  Future<List<StockLookup>> searchStocks(String query);
+
 }

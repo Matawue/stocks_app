@@ -116,7 +116,7 @@ class _StockView extends StatelessWidget {
                   ),
                 ),
 
-                SizedBox(width: 10,),
+                const SizedBox(width: 10,),
         
                 //Nombre compañía con precio actual y porcentaje
                 SizedBox(

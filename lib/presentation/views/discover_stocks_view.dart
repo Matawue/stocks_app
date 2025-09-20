@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:stocks_app/presentation/delegates/search_stock_delegate.dart';
 import 'package:stocks_app/presentation/providers/stocks/stocks_provider.dart';
+import 'package:stocks_app/presentation/providers/stocks/stocks_repository_provider.dart';
 import 'package:stocks_app/presentation/widgets/stocks/stock_horizontal_listview.dart';
 
 
@@ -32,13 +34,30 @@ class _DiscoverStocksViewState extends ConsumerState<DiscoverStocksView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Portafolio'),
-        actions: [
-          IconButton(
-            onPressed: (){},
-            icon: Icon(Icons.search_rounded)
-          )
-        ],
+        title: SizedBox(
+          width: double.infinity,
+          child: TextButton.icon(
+            onPressed: () {
+              
+              final stockRepository = ref.read(stockRepositoryProvider);
+
+              showSearch(
+                context: context, 
+                delegate: SearchStockDelegate(
+                  searchStocks: stockRepository.searchStocks,
+                )
+              );
+            }, 
+
+            label: const Text('Buscar', style: TextStyle(fontSize: 18),),
+            icon: Icon(Icons.search, size: 22,),
+            iconAlignment: IconAlignment.start,
+            style: ButtonStyle(
+              alignment: AlignmentGeometry.centerLeft,
+              backgroundColor: WidgetStateProperty.all<Color>(Colors.grey.shade300),
+            ),
+          ),
+        )
       ),
 
       //TODO: Capaz hacer una capa aparte que me vea si todos cargaron, o hasta hacerle un esqueleto a el StockHorizontal para que no aparezca la pantalla de carga y pueda ver el boton de busqueda

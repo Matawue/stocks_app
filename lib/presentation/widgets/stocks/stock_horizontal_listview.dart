@@ -44,7 +44,8 @@ class _StockHorizontalListviewState extends State<StockHorizontalListview> {
   @override
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).textTheme.bodyLarge;
-    return SizedBox(height: 250,
+    return SizedBox(
+      height: 220,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -83,18 +84,25 @@ class _StocksSwipe extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = Theme.of(context).textTheme.titleLarge;
+    final textStyle = Theme.of(context).textTheme.titleMedium;
     
     return FadeInRight(
       child: GestureDetector(
         onTap: () => context.push('/stock/${stock.symbol}'),
         child: Container(
-          width: 130,
-          margin: EdgeInsets.symmetric(horizontal: 10,),
-          padding: EdgeInsets.symmetric(vertical: 15),
+          width: 100,
+          margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          padding: EdgeInsets.symmetric(vertical: 15,),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            color: Colors.grey.shade200
+            color: const Color.fromARGB(255, 245, 245, 245),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black45,
+                offset: Offset(0, 0),
+                blurRadius: 5
+              )
+            ]
           ),
           
         
@@ -102,8 +110,8 @@ class _StocksSwipe extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                width: 100,
-                height: 100,
+                width: 70,
+                height: 70,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   child: ClipOval(
@@ -116,7 +124,7 @@ class _StocksSwipe extends StatelessWidget {
               SizedBox(height: 10,),
         
               SizedBox(
-                width: 100,
+                width: 70,
                 child: Center(child: Text(stock.symbol, style: textStyle,)),
               )
         

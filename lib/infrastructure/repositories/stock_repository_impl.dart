@@ -1,7 +1,5 @@
 import 'package:stocks_app/domain/datasources/stock_datasource.dart';
-import 'package:stocks_app/domain/entities/stock.dart';
-import 'package:stocks_app/domain/entities/stock_info.dart';
-import 'package:stocks_app/domain/entities/stock_price.dart';
+import 'package:stocks_app/domain/entities/entities.dart';
 import 'package:stocks_app/domain/repositories/stock_repository.dart';
 
 
@@ -31,6 +29,11 @@ class StockRepositoryImpl extends StockRepository{
   @override
   Future<StockInfo> getStockInfo(String symbol) {
     return datasource.getStockInfo(symbol);
+  }
+  
+  @override
+  Future<List<StockLookup>> searchStocks(String query) {
+    return datasource.searchStocks(query);
   }
 
   

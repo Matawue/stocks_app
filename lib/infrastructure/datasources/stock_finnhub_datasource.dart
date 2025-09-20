@@ -5,11 +5,13 @@ import 'package:pool/pool.dart';
 import 'package:stocks_app/config/constants/environment.dart';
 import 'package:stocks_app/domain/datasources/stock_datasource.dart';
 import 'package:stocks_app/infrastructure/mappers/stock_info_mapper.dart';
+import 'package:stocks_app/infrastructure/mappers/stock_lookup_mapper.dart';
 import 'package:stocks_app/infrastructure/mappers/stock_mapper.dart';
 import 'package:stocks_app/infrastructure/mappers/stock_price_mapper.dart';
 import 'package:stocks_app/domain/entities/entities.dart';
 import 'package:stocks_app/infrastructure/models/stockfinnhub/stock_finnhub_response.dart';
 import 'package:stocks_app/infrastructure/models/stockfinnhub/stock_info_finnhub_response.dart';
+import 'package:stocks_app/infrastructure/models/stockfinnhub/stock_lookup_finnhub_response.dart';
 import 'package:stocks_app/infrastructure/models/stockfinnhub/stock_price_finnhub_response.dart';
 
 class StockFinnhubDatasource extends StockDatasource{
@@ -102,5 +104,26 @@ class StockFinnhubDatasource extends StockDatasource{
     return stockInfo;
     
   }
+  
+  @override
+  Future<List<StockLookup>> searchStocks(String query) async{
+    final response = await dio.get(
+      '/search',
+      queryParameters: {
+        'q': query,
+        'exchange': 'US'
+      }
+    );
 
+    //TODO: podria usar el count de el lookup a mi favor lugo para hacer un esqueleto a todos los que vayan a estar
+    //TODO: capaz tambien deberia poner como entidad que sea un stock en vez de stocklookup y poner que pueden ser nulos los atributos que no posee el lookup
+    final stocksLookupResponse = StockLookupFinnhubResponse.fromJson(response.data);
+    // stocksLookupResponse.count; este
+    final List<StockLookup> stocksLookup = stocksLookupResponse.result
+    .map(
+      (stockLookupFinnhub) => StockLookupMapper.stockLookupFinnhubToEntity(stockLookupFinnhub)
+    ).toList();
+
+    return stocksLookup;
+  }
 }
