@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:stocks_app/domain/entities/entities.dart';
 import 'package:stocks_app/presentation/delegates/search_stock_delegate.dart';
-import 'package:stocks_app/presentation/providers/stocks/stocks_provider.dart';
-import 'package:stocks_app/presentation/providers/stocks/stocks_repository_provider.dart';
+import 'package:stocks_app/presentation/providers/providers.dart';
 import 'package:stocks_app/presentation/widgets/stocks/stock_horizontal_listview.dart';
 
 
@@ -40,13 +41,22 @@ class _DiscoverStocksViewState extends ConsumerState<DiscoverStocksView> {
             onPressed: () {
               
               final stockRepository = ref.read(stockRepositoryProvider);
+              final searchQuery = ref.read(searchQueryProvider);
 
-              showSearch(
+              showSearch<StockLookup?>(
+                query: searchQuery,
                 context: context, 
                 delegate: SearchStockDelegate(
-                  searchStocks: stockRepository.searchStocks,
+                  searchStocks: (String query) {
+                    ref.read(searchQueryProvider.notifier).update((state) => query);
+                    return stockRepository.searchStocks(query);
+                  }
                 )
-              );
+              ).then((stock) {
+                if(stock == null) return;
+                
+                context.push('/stock/${stock.symbol}');
+              });
             }, 
 
             label: const Text('Buscar', style: TextStyle(fontSize: 18),),

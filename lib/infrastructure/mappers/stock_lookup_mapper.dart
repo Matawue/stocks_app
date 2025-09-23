@@ -7,6 +7,7 @@ class StockLookupMapper {
   ) => StockLookup(
     name: stockFromFinnhub.description, 
     symbol: stockFromFinnhub.symbol, 
-    type: stockFromFinnhub.type
+    type: stockFromFinnhub.type,
+    image: 'https://images.financialmodelingprep.com/symbol/${stockFromFinnhub.symbol}.png'
   );
 }

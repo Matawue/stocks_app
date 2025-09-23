@@ -1,6 +1,7 @@
 
 
 import 'package:dio/dio.dart';
+//import 'dart:io';
 import 'package:pool/pool.dart';
 import 'package:stocks_app/config/constants/environment.dart';
 import 'package:stocks_app/domain/datasources/stock_datasource.dart';
@@ -28,7 +29,7 @@ class StockFinnhubDatasource extends StockDatasource{
   ));
 
   @override
-  Future<StockPrice> getStockPrice(String symbol) async{ // TODO: pasarle argumento de nombre del symbol que la persona desee
+  Future<StockPrice> getStockPrice(String symbol) async{
     final response = await dio.get('/quote',
     queryParameters: {
       'symbol': symbol
@@ -59,15 +60,17 @@ class StockFinnhubDatasource extends StockDatasource{
       (json) => StockFinnhubResponse.fromJson(json)
     );
 
-    final pool = Pool(3);
+    //final int numberOfCores = Platform.numberOfProcessors;
+    //print(numberOfCores);
+
+    final pool = Pool(10);
 
 
     for(final stockFinnhub in stockResponse) {
       pool.withResource(() async {
         final hasImage = await hasImageBySymbol(stockFinnhub.symbol);
         if(hasImage) {
-          final stock = StockMapper.stockFinnhubToEntity(stockFinnhub); 
-          onStockFound(stock);
+          onStockFound(StockMapper.stockFinnhubToEntity(stockFinnhub));
         }
       });
     }
@@ -82,10 +85,10 @@ class StockFinnhubDatasource extends StockDatasource{
       final response = await dioImage.get('/$symbol.png');
       return response.statusCode == 200;
     } on DioException catch (e) {
-    if (e.response?.statusCode == 404) return false;
-    if(e.response?.statusCode != 200) return false;
-    rethrow; // otros errores, relanza la excepción
-  }
+      if (e.response?.statusCode == 404) return false;
+      if(e.response?.statusCode != 200) return false;
+      rethrow; // otros errores, relanza la excepción
+    }
   }
   
   @override
@@ -118,12 +121,25 @@ class StockFinnhubDatasource extends StockDatasource{
     //TODO: podria usar el count de el lookup a mi favor lugo para hacer un esqueleto a todos los que vayan a estar
     //TODO: capaz tambien deberia poner como entidad que sea un stock en vez de stocklookup y poner que pueden ser nulos los atributos que no posee el lookup
     final stocksLookupResponse = StockLookupFinnhubResponse.fromJson(response.data);
+    final pool = Pool(5);
     // stocksLookupResponse.count; este
-    final List<StockLookup> stocksLookup = stocksLookupResponse.result
-    .map(
-      (stockLookupFinnhub) => StockLookupMapper.stockLookupFinnhubToEntity(stockLookupFinnhub)
-    ).toList();
+    
+    //final List<StockLookup> stocksLookup = stocksLookupResponse.result
+    //.map(
+    //  (stockLookupFinnhub) => StockLookupMapper.stockLookupFinnhubToEntity(stockLookupFinnhub)
+    //).toList();
 
+    List<StockLookup> stocksLookup = [];
+
+    for(final stockLookup in stocksLookupResponse.result) {
+      await pool.withResource(() async {
+        final hasImage = await hasImageBySymbol(stockLookup.symbol);
+        if(hasImage) {
+          stocksLookup.add(StockLookupMapper.stockLookupFinnhubToEntity(stockLookup));
+        }
+      });
+    }
+    await pool.close();
     return stocksLookup;
   }
 }

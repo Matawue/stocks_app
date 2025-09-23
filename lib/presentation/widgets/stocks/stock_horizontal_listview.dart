@@ -91,16 +91,16 @@ class _StocksSwipe extends StatelessWidget {
         onTap: () => context.push('/stock/${stock.symbol}'),
         child: Container(
           width: 100,
-          margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          margin: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
           padding: EdgeInsets.symmetric(vertical: 15,),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             color: const Color.fromARGB(255, 245, 245, 245),
             boxShadow: [
               BoxShadow(
-                color: Colors.black45,
+                color: Colors.black38,
                 offset: Offset(0, 0),
-                blurRadius: 5
+                blurRadius: 3
               )
             ]
           ),
@@ -125,7 +125,7 @@ class _StocksSwipe extends StatelessWidget {
         
               SizedBox(
                 width: 70,
-                child: Center(child: Text(stock.symbol, style: textStyle,)),
+                child: Center(child: Text(stock.symbol, style: textStyle!.copyWith(color: Colors.black54),)),
               )
         
         
