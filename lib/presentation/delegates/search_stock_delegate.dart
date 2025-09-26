@@ -6,11 +6,16 @@ import 'package:stocks_app/domain/entities/entities.dart';
 
 typedef SearchStocksCallback = Future<List<StockLookup>>Function( String query );
 
+
 //TODO: Buscar una manera de poder hacer que cuando busque se quede guardado lo que busco
 
 class SearchStockDelegate extends SearchDelegate<StockLookup?>{
 
   final SearchStocksCallback searchStocks;
+  List<StockLookup> initialStocks;
+  final String searchQuery;
+  bool isInitialData;
+  bool isLoading = false; 
 
   // Se hace un Stream con su metodo broadcast, ya que es posible de que tenga mas de un listener en las funciones
   // Si tiene solo un listener entonces ocupar StreamController solo
@@ -18,19 +23,27 @@ class SearchStockDelegate extends SearchDelegate<StockLookup?>{
   Timer? _debounceTimer;
 
   SearchStockDelegate({
-    required this.searchStocks
-  });
+    required this.searchStocks,
+    required this.initialStocks,
+    required this.searchQuery,
+    required this.isInitialData
+  }):super(
+    searchFieldLabel: 'Buscar acciones',
+    autocorrect: false,
+  );
+
 
   //TODO: seria bueno implementar un isLoading, y que si esta con isLoading, entonces me muestre el esqueleto de carga
+  //TODO: Hacer que cuando las peliculas ya estan cargadas inicialmente, no hacer otra petición http
   void _onQueryChanged( String query ) {
+    if(!isLoading) isLoading = true;
     if( _debounceTimer?.isActive ?? false) _debounceTimer!.cancel();
     _debounceTimer = Timer(const Duration(seconds: 1), () async{
-      if(query.isEmpty) {
-        debouncedStocks.add([]);
-        return;
-      }
+      
       final stocks = await searchStocks(query);
+      initialStocks = stocks;
       debouncedStocks.add(stocks);
+      isLoading = false;
 
     });
   }
@@ -39,8 +52,54 @@ class SearchStockDelegate extends SearchDelegate<StockLookup?>{
     debouncedStocks.close();
   }
 
-  @override
-  String get searchFieldLabel => 'Buscar acciones';
+  Widget buildResultsAndSuggestions() {
+    return StreamBuilder(
+      initialData: initialStocks,
+      stream: debouncedStocks.stream, 
+      builder: (context, snapshot) {
+
+        final stocks = snapshot.data ?? [];
+        //TODO: hacer un if donde si no hay nada que me haga un esqueletos de ListTile de carga
+        return (isLoading)
+        ?Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: ListView(
+            physics: NeverScrollableScrollPhysics(),
+            children: [
+              
+              _IsLoadingStock(),
+              _IsLoadingStock(),
+              _IsLoadingStock(),
+              _IsLoadingStock(),
+              _IsLoadingStock(),
+              _IsLoadingStock(),
+              _IsLoadingStock(),
+              _IsLoadingStock(),
+              _IsLoadingStock(),
+              _IsLoadingStock(),
+              _IsLoadingStock(),
+              _IsLoadingStock(),
+             
+              
+            ],
+          ),
+        )
+        :ListView.builder(
+          physics: BouncingScrollPhysics(),
+          itemCount: stocks.length,
+          itemBuilder: (context, index) =>_StockItem(
+            stock: stocks[index], 
+            onStockSelected: (context, stock) {
+              _clearStreams();
+              close(context, stock);
+            }
+          )
+        );
+      }
+    );
+  }
+
+
 
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -72,33 +131,75 @@ class SearchStockDelegate extends SearchDelegate<StockLookup?>{
 
   @override
   Widget buildResults(BuildContext context) {
-    return const Text('buildResults');
+    return buildResultsAndSuggestions();
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    //TODO: Puede que aqui no deje nada de logica y la deje solo en el results, porque no me interesa hacer tantas peticiones http
+    // Verifica si el query cambio
+    if(query != searchQuery) isInitialData = false;
+    // Verifica si la data sigue siendo la inicial, o ya hay que cambiarla
+    if(!isInitialData) _onQueryChanged(query);
+    return buildResultsAndSuggestions();
+  }
+}
 
-    _onQueryChanged(query);
-    return StreamBuilder(
-      //future: searchStocks(query),
-      stream: debouncedStocks.stream, 
-      builder: (context, snapshot) {
+class _IsLoadingStock extends StatelessWidget {
+  const _IsLoadingStock();
 
-        final stocks = snapshot.data ?? [];
-        //TODO: hacer un if donde si no hay nada que me haga un esqueletos de ListTile de carga
-        return ListView.builder(
-          physics: BouncingScrollPhysics(),
-          itemCount: stocks.length,
-          itemBuilder: (context, index) =>_StockItem(
-            stock: stocks[index], 
-            onStockSelected: (context, stock) {
-              _clearStreams();
-              close(context, stock);
-            }
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: ListTile(    
+        //dense: true,
+        minTileHeight: 60,
+        visualDensity: VisualDensity.compact,
+        tileColor: Colors.grey.shade200,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadiusGeometry.circular(10)
+        ),
+      
+        // Aqui va la imagen
+        leading:  ClipOval(
+          child: Container(
+            height: 36.6,
+            width: 36.6,
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black45,
+                  blurRadius: 5
+                )
+              ]
+            ),
           )
-        );
-      }
+        ),
+        title: Container(
+          height: 14,
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black45,
+                  blurRadius: 5
+                )
+            ]
+          ),
+        ),
+        subtitle: Container(
+          height: 8,
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black45,
+                  blurRadius: 5
+                )
+            ]
+          ),
+        ),
+        //TODO: podria ser una funcionalidad para agregar el stock a tu portafolio
+        //trailing: //Boton de agregar un stock
+      ),
     );
   }
 }
@@ -116,7 +217,6 @@ class _StockItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     final textStyle = Theme.of(context).textTheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
@@ -134,8 +234,8 @@ class _StockItem extends StatelessWidget {
         //TODO: Probablemente en la imagen sea mejor poner un dato duro, en vez de dependiendo del size de la pantalla
         leading: ClipOval(
           child: Image.network(
-            height: size.height*0.05,
-            width: size.height*0.05,
+            height: 36.6,
+            width: 36.6,
             stock.image,
             loadingBuilder: (context, child, loadingProgress) => FadeIn(child: child),
           ),

@@ -110,6 +110,10 @@ class StockFinnhubDatasource extends StockDatasource{
   
   @override
   Future<List<StockLookup>> searchStocks(String query) async{
+    
+    // Si no hay nada en el query de busqueda no realizar petición http
+    if(query.isEmpty || query == '') return [];
+    
     final response = await dio.get(
       '/search',
       queryParameters: {
@@ -117,6 +121,7 @@ class StockFinnhubDatasource extends StockDatasource{
         'exchange': 'US'
       }
     );
+    
 
     //TODO: podria usar el count de el lookup a mi favor lugo para hacer un esqueleto a todos los que vayan a estar
     //TODO: capaz tambien deberia poner como entidad que sea un stock en vez de stocklookup y poner que pueden ser nulos los atributos que no posee el lookup

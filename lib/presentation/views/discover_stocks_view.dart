@@ -40,17 +40,16 @@ class _DiscoverStocksViewState extends ConsumerState<DiscoverStocksView> {
           child: TextButton.icon(
             onPressed: () {
               
-              final stockRepository = ref.read(stockRepositoryProvider);
+              final searchedStocks = ref.read(searchedStocksProvider);
               final searchQuery = ref.read(searchQueryProvider);
-
               showSearch<StockLookup?>(
                 query: searchQuery,
                 context: context, 
                 delegate: SearchStockDelegate(
-                  searchStocks: (String query) {
-                    ref.read(searchQueryProvider.notifier).update((state) => query);
-                    return stockRepository.searchStocks(query);
-                  }
+                  initialStocks: searchedStocks,
+                  searchStocks: ref.read(searchedStocksProvider.notifier).searchStocksByQuery,
+                  searchQuery: searchQuery,
+                  isInitialData: true
                 )
               ).then((stock) {
                 if(stock == null) return;
