@@ -25,7 +25,10 @@ class StockFinnhubDatasource extends StockDatasource{
   ));
 
   final dioImage = Dio(BaseOptions(
-    baseUrl: 'https://images.financialmodelingprep.com/symbol'
+    baseUrl: 'https://images.financialmodelingprep.com/symbol',
+    //validateStatus: (status) {
+    //  return status != null && status <= 500;
+    //},
   ));
 
   @override
@@ -81,14 +84,41 @@ class StockFinnhubDatasource extends StockDatasource{
   
   @override
   Future<bool> hasImageBySymbol(String symbol) async{
+  /*
+
+  PD: tuve que ocuparlo debido a que habian ciertas excepciones que no podia manejar con el statusCode 
+
+  Bloque try que usaba antes, decidi no usarlo para no crear 
+  objetos innecesarios de Excepciones, ya que al ser muchas llamadas
+  puede haber un retraso significativo. Además no me interesa una
+  excepción en especifico, y para eso se suelen usar los try, yo quiero tratar
+  los errores de manera generalizada
+  
+  
+  */
+
    try {
       final response = await dioImage.get('/$symbol.png');
       return response.statusCode == 200;
     } on DioException catch (e) {
-      if (e.response?.statusCode == 404) return false;
       if(e.response?.statusCode != 200) return false;
       rethrow; // otros errores, relanza la excepción
     }
+
+    /*
+
+    Si la imagen existe el status es 200 y lanza un true
+    y si no existe devuelve 404 not found, entonces da falso
+
+    */
+    
+    //final response = await dioImage.get('/$symbol.png');
+    //TODO: ESTA ME GUSTA MÁS, pero esta dificil porque aveces saltan una excepciones que no se pueden controlar con statusCode y no se como
+    //if(response.statusCode==200) {
+    //  return true;
+    //} else {
+    //  return false;
+    //}
   }
   
   @override
@@ -123,16 +153,9 @@ class StockFinnhubDatasource extends StockDatasource{
     );
     
 
-    //TODO: podria usar el count de el lookup a mi favor lugo para hacer un esqueleto a todos los que vayan a estar
     //TODO: capaz tambien deberia poner como entidad que sea un stock en vez de stocklookup y poner que pueden ser nulos los atributos que no posee el lookup
     final stocksLookupResponse = StockLookupFinnhubResponse.fromJson(response.data);
     final pool = Pool(5);
-    // stocksLookupResponse.count; este
-    
-    //final List<StockLookup> stocksLookup = stocksLookupResponse.result
-    //.map(
-    //  (stockLookupFinnhub) => StockLookupMapper.stockLookupFinnhubToEntity(stockLookupFinnhub)
-    //).toList();
 
     List<StockLookup> stocksLookup = [];
 

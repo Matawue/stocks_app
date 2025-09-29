@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:stocks_app/domain/entities/entities.dart';
 import 'package:stocks_app/presentation/delegates/search_stock_delegate.dart';
 import 'package:stocks_app/presentation/providers/providers.dart';
@@ -51,11 +50,7 @@ class _DiscoverStocksViewState extends ConsumerState<DiscoverStocksView> {
                   searchQuery: searchQuery,
                   isInitialData: true
                 )
-              ).then((stock) {
-                if(stock == null) return;
-                
-                context.push('/stock/${stock.symbol}');
-              });
+              );
             }, 
 
             label: const Text('Buscar', style: TextStyle(fontSize: 18),),
