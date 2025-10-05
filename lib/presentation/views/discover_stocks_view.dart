@@ -29,8 +29,8 @@ class _DiscoverStocksViewState extends ConsumerState<DiscoverStocksView> {
   @override
   Widget build(BuildContext context) {
 
-    final stocks1 = ref.watch(getStocksFromNYProvider);
-    final stocks2 = ref.watch(getStocksFromNASProvider);
+    final stocksFromNY = ref.watch(getStocksFromNYProvider);
+    final stocksFromNAS = ref.watch(getStocksFromNASProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -65,19 +65,19 @@ class _DiscoverStocksViewState extends ConsumerState<DiscoverStocksView> {
       ),
 
       //TODO: Capaz hacer una capa aparte que me vea si todos cargaron, o hasta hacerle un esqueleto a el StockHorizontal para que no aparezca la pantalla de carga y pueda ver el boton de busqueda
-      body: (stocks1.isEmpty && stocks2.isEmpty)
+      body: (stocksFromNY.isEmpty && stocksFromNAS.isEmpty)
       ? Center(child: CircularProgressIndicator(strokeWidth: 2,),)
 
       :Column(
         children: [
           StockHorizontalListview(
-            stocks: stocks1, 
+            stocks: stocksFromNY, 
             title: 'New York stocks',
             loadNextPage: () => ref.read(getStocksFromNYProvider.notifier).loadNextPage(),
           ),
 
           StockHorizontalListview(
-            stocks: stocks2, 
+            stocks: stocksFromNAS, 
             title: 'NASDAQ stocks',
             loadNextPage: () => ref.read(getStocksFromNASProvider.notifier).loadNextPage(),
           )

@@ -25,13 +25,11 @@ final getStocksFromNASProvider = StateNotifierProvider<StocksNotifier, List<Stoc
 
 });
 
-typedef StockCallback = StockRepositoryImpl;
-
 
 class StocksNotifier extends StateNotifier<List<Stock>> {
   int currentPage = 0;
   bool isLoading = false;
-  final StockCallback stocks;
+  final StockRepositoryImpl stocks;
   final String marketIdentifierCode;
 
   final List<Stock> _allStocks = [];
@@ -43,36 +41,62 @@ class StocksNotifier extends StateNotifier<List<Stock>> {
   }) : super([]);
 
   Future<void> loadStocksIncremental() async {
-    _allStocks.clear();
+
     await stocks.getStock(
         marketIdentifierCode: marketIdentifierCode,
+
+        // Función que me permite agregar uno a uno los stocks desde el datasource de Finnhub
         onStockFound: (stock) {
           _allStocks.add(stock);
-          if(_allStocks.length == 20) loadNextPage();
+
+          /* 
+          
+          Si el listado de _allStocks tiene menos de 20 elementos y el estado esta vacío, 
+          llama a loadNextPage para empezar a agregar stocks al estado
+          
+          */
+          if(_allStocks.length >= 20 && state.isEmpty) loadNextPage();
         },
       );
   }
 
   Future<void> loadNextPage() async{
-
+    // Si esta cargando retorna
     if(isLoading) return;
     
+    // Si el _allStocks esta vacío retorna
     if(_allStocks.isEmpty) return;
+
     isLoading = true;
+    
+    /* 
+    
+    El offset será usado para desplazarme en el listado, 
+    donde se multiplicara por 10 dependiendo de la pagina en la que estemos, 
+    ya que cada pagina tendra 10 elementos(stocks)
+    
+    */
     int offset = currentPage*10;
+
+    //creo tempStocksList para ir guardando aqui las acciones que luego agregare al state
     List<Stock> tempStocksList = [];
-    //pensando en poner el modulo de 10 de el length para contar
+
+    //*pensando en poner el modulo de 10 de el length para contar
+
+    // for para agregar 10 stocks dependiendo del desplazamiento del offset
     for(int i = offset; i<offset+10 && i<_allStocks.length; i++){
       tempStocksList.add(_allStocks[i]);
     }
+
+    // Pasamos a la siguiente pagina sumandole 1 a la actual
     currentPage++;
 
+    // Se agrega el nuevo listado tempStocksList al state
     state = [...state, ...tempStocksList];
-    await Future.delayed(const Duration(seconds: 3));
+
+    // Damos un tiempo de 2 segundos antes de que el isLoading sea false y nos permita cargar mas stocks
+    await Future.delayed(const Duration(seconds: 2));
     isLoading = false;
 
   }
-
-
-
 }

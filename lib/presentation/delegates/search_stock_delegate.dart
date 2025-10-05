@@ -41,6 +41,7 @@ class SearchStockDelegate extends SearchDelegate<StockLookup?>{
     autocorrect: false, // para que no haga autocorrecciones
     //keyboardType: TextInputType.phone
     //searchFieldDecorationTheme: InputDecoration()
+    //textInputAction: TextInputAction.done
   );
   
 
@@ -56,7 +57,7 @@ class SearchStockDelegate extends SearchDelegate<StockLookup?>{
       
       /*
       
-      Ahora que agregue esto cuando escribo algo y me salgo antes de que añada los stocks
+      Ahora que agregue esto cuando escribo algo y me salgo antes de que añada los stocks // el debouncedStocks, pero se añaden al initialStocks cuando obtiene el listado, por lo que si me vuelvo a meter a las busquedas antes de que se complete, sale que tengo el nuevo query, pero sin el nuevo listado, sino que el viejo, arreglar esto
       quedan los stocks de antes debido a que no se alcanzo a añadir el nuevo listado
       TODO: Arreglar este problema
       
@@ -181,9 +182,8 @@ class SearchStockDelegate extends SearchDelegate<StockLookup?>{
     Verifica si el query cambio
     
     */
-    if(query != searchQuery){
-      isInitialData = false;
-    } 
+    if(query != searchQuery) isInitialData = false;
+  
 
     //TODO: ver si se puede llegar a simplificar esta logica
     /*
