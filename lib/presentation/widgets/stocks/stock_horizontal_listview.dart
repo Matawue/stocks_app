@@ -98,9 +98,9 @@ class _StocksSwipe extends StatelessWidget {
             color: const Color.fromARGB(255, 245, 245, 245),
             boxShadow: [
               BoxShadow(
-                color: Colors.black38,
+                color: Colors.black26,
                 offset: Offset(0, 0),
-                blurRadius: 3
+                blurRadius: 1.6
               )
             ]
           ),
