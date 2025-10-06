@@ -57,7 +57,7 @@ class StockItemBySearch extends StatelessWidget {
         //TODO: podria ser una funcionalidad para agregar el stock a tu portafolio
         trailing: IconButton(
           onPressed: (){}, 
-          icon: Icon(Icons.add_box_outlined)
+          icon: Icon(Icons.add_circle_outline)
         ),
         
         /*

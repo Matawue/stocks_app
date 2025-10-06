@@ -23,9 +23,9 @@ class StockFinnhubDatasource extends StockDatasource{
 
   final dioImage = Dio(BaseOptions(
     baseUrl: 'https://images.financialmodelingprep.com/symbol',
-    validateStatus: (status) {
-      return status != null && status <= 500;
-    },
+    //validateStatus: (status) {
+    //  return status != null && status <= 500;
+    //},
   ));
 
   @override
@@ -79,39 +79,24 @@ class StockFinnhubDatasource extends StockDatasource{
   
   @override
   Future<bool> hasImageBySymbol(String symbol) async{
-  /*
+  
 
-  Bloque try que usaba antes, decidi no usarlo para no crear 
-  objetos innecesarios de Excepciones, ya que al ser muchas llamadas
-  puede haber un retraso significativo. Además no me interesa una
-  excepción en especifico, y para eso se suelen usar los try, yo quiero tratar
-  los errores de manera generalizada
-    
-  */
-
-   //try {
-   //   final response = await dioImage.get('/$symbol.png');
-   //   return response.statusCode == 200;
-   // } on DioException catch (e) {
-   //   if(e.response?.statusCode != 200) return false;
-   //   rethrow; // otros errores, relanza la excepción
-   // }
-
-    
-    /*
-
-    Esta es mejor, ya que no me interesa manejar las excepciones,
-    solo me interesa saber si cargo la imagen o no, si la cargo correctamente 
-    la podré ocupar(retorna true) y si me da un error, pues no(retorna false) 
-
-
-    */
-    final response = await dioImage.get('/$symbol.png');
-    if(response.statusCode==200) {
-      return true;
-    } else {
-      return false;
+   try {
+      final response = await dioImage.get('/$symbol.png');
+      return response.statusCode == 200;
+    } on DioException catch (e) {
+      if(e.response?.statusCode != 200) return false;
+      rethrow; // otros errores, relanza la excepción
     }
+
+    
+    
+    //final response = await dioImage.get('/$symbol.png');
+    //if(response.statusCode==200) {
+    //  return true;
+    //} else {
+    //  return false;
+    //}
   }
   
   @override

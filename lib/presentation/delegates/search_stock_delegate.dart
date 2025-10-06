@@ -9,7 +9,6 @@ import 'package:stocks_app/presentation/widgets/widgets.dart';
 typedef SearchStocksCallback = Future<List<StockLookup>>Function( String query );
 
 
-//TODO: Buscar una manera de poder hacer que cuando busque se quede guardado lo que busco
 
 class SearchStockDelegate extends SearchDelegate<StockLookup?>{
 
@@ -62,6 +61,8 @@ class SearchStockDelegate extends SearchDelegate<StockLookup?>{
       TODO: Arreglar este problema
       
       */
+
+      // Si el debouncedStocks no esta cerrado, se añade el listado de stocks al stream
       if(!debouncedStocks.isClosed) debouncedStocks.add(stocks);
       isLoading = false;
     });
@@ -90,30 +91,35 @@ class SearchStockDelegate extends SearchDelegate<StockLookup?>{
         return (isLoading && query.isNotEmpty)
         ?Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: ListView(
+          child: SingleChildScrollView(
             physics: NeverScrollableScrollPhysics(),
-            
-            children: [
+            child: const Column(
               
-              const LoadingStockBySearch(),
-              const LoadingStockBySearch(),
-              const LoadingStockBySearch(),
-              const LoadingStockBySearch(),
-              const LoadingStockBySearch(),
-              const LoadingStockBySearch(),
-              const LoadingStockBySearch(),
-              const LoadingStockBySearch(),
-              const LoadingStockBySearch(),
-              const LoadingStockBySearch(),
-              const LoadingStockBySearch(),
-              const LoadingStockBySearch(),
-             
-              
-            ],
+              children: [
+                
+                LoadingStockBySearch(),
+                LoadingStockBySearch(),
+                LoadingStockBySearch(),
+                LoadingStockBySearch(),
+                LoadingStockBySearch(),
+                LoadingStockBySearch(),
+                LoadingStockBySearch(),
+                LoadingStockBySearch(),
+                LoadingStockBySearch(),
+                LoadingStockBySearch(),
+                LoadingStockBySearch(),
+                LoadingStockBySearch(),
+                LoadingStockBySearch(),
+               
+                
+              ],
+            ),
           ),
         )
         :ListView.builder(
-          physics: BouncingScrollPhysics(),
+
+          // TODO: Me gustaría cambiar a Clamping, pero queda raro el widget al extender el scroll
+          physics: BouncingScrollPhysics(decelerationRate: ScrollDecelerationRate.fast),
 
           /*
 
@@ -143,15 +149,14 @@ class SearchStockDelegate extends SearchDelegate<StockLookup?>{
   List<Widget>? buildActions(BuildContext context) {
     
     return [
-        FadeIn(
-          animate: query.isNotEmpty,
-          duration: const Duration(milliseconds: 200),
-          child: IconButton(
-            onPressed: () => query = '', 
-            icon: const Icon(Icons.clear_rounded)
-          ),
-        )
-      
+      FadeIn(
+        animate: query.isNotEmpty,
+        duration: const Duration(milliseconds: 200),
+        child: IconButton(
+          onPressed: () => query = '', 
+          icon: const Icon(Icons.clear_rounded)
+        ),
+      )
     ];
   }
 

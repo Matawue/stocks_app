@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:stocks_app/domain/entities/entities.dart';
 import 'package:stocks_app/presentation/delegates/search_stock_delegate.dart';
 import 'package:stocks_app/presentation/providers/providers.dart';
 import 'package:stocks_app/presentation/widgets/stocks/stock_horizontal_listview.dart';
@@ -41,7 +40,7 @@ class _DiscoverStocksViewState extends ConsumerState<DiscoverStocksView> {
               
               final searchedStocks = ref.read(searchedStocksProvider);
               final searchQuery = ref.read(searchQueryProvider);
-              showSearch<StockLookup?>(
+              showSearch(
                 query: searchQuery,
                 context: context, 
                 delegate: SearchStockDelegate(
