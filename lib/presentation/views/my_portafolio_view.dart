@@ -44,7 +44,22 @@ class MyPortafolioView extends StatelessWidget {
         child: Column(
           
           children: [
-            Text('AQUI IRAN LOS BOTONES DE FILTRADO DE GRAFICO'),
+
+            SizedBox(height: 20,),
+
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+
+              child: Row(
+                spacing: 5,
+                children: [
+                  _FilterButton('Valor inversión'),
+                  _FilterButton('Distribución(%)'),
+                  _FilterButton('Valor inversión'),
+                  _FilterButton('Valor inversión'),
+                ],
+              ),
+            ),
 
             Spacer(),
 
@@ -63,16 +78,18 @@ class MyPortafolioView extends StatelessWidget {
               chartValuesOptions: ChartValuesOptions(
                 //showChartValues: false //!Para que los valores no aparezcan
                 decimalPlaces: 2,
-                //showChartValueBackground: false // para no mostrar el background de los valores
+                //showChartValueBackground: false, // para no mostrar el background de los valores
                 //showChartValuesInPercentage: true, // para que aparezcan como porcentajes los values
                 showChartValuesOutside: true, // para que los valores aparezcan afuera
                 chartValueBackgroundColor: colors.primary,
                 chartValueStyle: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500) // el text style del valor
               ),
           
-              legendOptions: LegendOptions(
-                //showLegends: false, // Esto es para no mostrar el contexto de que es cada cosa y su respectivo color
-              ),
+              //legendOptions: LegendOptions(
+              //  //showLegends: false, // Esto es para no mostrar el contexto de que es cada cosa y su respectivo color
+              //),
+              //baseChartColor: Colors.red,
+              
             ),
 
             Spacer(),
@@ -109,6 +126,27 @@ class MyPortafolioView extends StatelessWidget {
           ],
         ),
       )
+    );
+  }
+}
+
+class _FilterButton extends StatelessWidget {
+
+  final String filter;
+  
+  const _FilterButton(this.filter);
+
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton.tonal(
+      onPressed:(){} ,
+    
+      style: ButtonStyle(
+        visualDensity: VisualDensity.compact
+      ),
+    
+      child: Text(filter),
+    
     );
   }
 }

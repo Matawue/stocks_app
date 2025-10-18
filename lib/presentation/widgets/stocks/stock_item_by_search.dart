@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:stocks_app/domain/entities/entities.dart';
+import 'package:stocks_app/presentation/widgets/shared/add_stock_dialog.dart';
 
 class StockItemBySearch extends StatelessWidget {
   
@@ -56,7 +57,17 @@ class StockItemBySearch extends StatelessWidget {
 
         //TODO: podria ser una funcionalidad para agregar el stock a tu portafolio
         trailing: IconButton(
-          onPressed: (){}, 
+          onPressed: (){
+            
+            // TODO: hacer un provider que me reciba el retorno de esto y que sea la accion y cuantas acciones, para asi ponerlo en el portafolio
+            showDialog(
+              context: context, 
+              builder: (context){
+                return AddStockDialog(stock: stock);
+              } 
+            );
+          
+          }, 
           icon: Icon(Icons.add_circle_outline)
         ),
         
