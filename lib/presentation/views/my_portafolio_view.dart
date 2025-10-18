@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pie_chart/pie_chart.dart';
 
 
@@ -101,7 +102,9 @@ class MyPortafolioView extends StatelessWidget {
                   width: size.width*0.45,
                   height: 40,
                   child: FilledButton.icon(
-                    onPressed: (){}, 
+                    onPressed: (){
+                      context.push('/addstock');
+                    }, 
                     label: Text('Añadir Acción'),
                     icon: Icon(Icons.add, size: 22),
                   ),

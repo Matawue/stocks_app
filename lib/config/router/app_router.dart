@@ -35,14 +35,15 @@ final goRouter = GoRouter(
             GoRoute(
               path: '/portafolio',
               builder: (context, state) => const MyPortafolioView() 
-            )
+            ),
+
           ]
         ),
 
         StatefulShellBranch(
           routes: <RouteBase>[
             GoRoute(
-              path: '/descubrir',
+              path: '/descubrir', //capaz deberia ponerlo en ingles jeje
               builder: (context, state) => const DiscoverStocksView(),
             )
           ]
@@ -58,6 +59,11 @@ final goRouter = GoRouter(
           getCurrentIndex: navigationShell.currentIndex,
         );
       }
+    ),
+
+    GoRoute(
+      path: '/addstock',
+      builder: (context, state) => const AddStocksScreen(),
     )
 
 
