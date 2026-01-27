@@ -6,14 +6,14 @@ import 'package:stocks_app/domain/entities/entities.dart';
 import 'package:stocks_app/presentation/widgets/widgets.dart';
 
 
-typedef SearchStocksCallback = Future<List<StockLookup>>Function( String query );
+typedef SearchStocksCallback = Future<List<Stock>>Function( String query );
 
 
 
-class SearchStockDelegate extends SearchDelegate<StockLookup?>{
+class SearchStockDelegate extends SearchDelegate<Stock?>{
 
   final SearchStocksCallback searchStocks;
-  List<StockLookup> initialStocks;
+  List<Stock> initialStocks;
   final String searchQuery;
   bool isInitialData;
   bool isLoading = false;
@@ -27,7 +27,7 @@ class SearchStockDelegate extends SearchDelegate<StockLookup?>{
   Si tiene solo un listener entonces ocupar StreamController solo
 
   */ 
-  StreamController<List<StockLookup>> debouncedStocks = StreamController.broadcast();
+  StreamController<List<Stock>> debouncedStocks = StreamController.broadcast();
   Timer? _debounceTimer;
 
   SearchStockDelegate({

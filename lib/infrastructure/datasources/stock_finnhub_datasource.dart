@@ -3,7 +3,6 @@ import 'package:pool/pool.dart';
 import 'package:stocks_app/config/constants/environment.dart';
 import 'package:stocks_app/domain/datasources/stock_datasource.dart';
 import 'package:stocks_app/infrastructure/mappers/stock_info_mapper.dart';
-import 'package:stocks_app/infrastructure/mappers/stock_lookup_mapper.dart';
 import 'package:stocks_app/infrastructure/mappers/stock_mapper.dart';
 import 'package:stocks_app/infrastructure/mappers/stock_price_mapper.dart';
 import 'package:stocks_app/domain/entities/entities.dart';
@@ -118,7 +117,7 @@ class StockFinnhubDatasource extends StockDatasource{
   }
   
   @override
-  Future<List<StockLookup>> searchStocks(String query) async{
+  Future<List<Stock>> searchStocks(String query) async{
     
     // Si no hay nada en el query de busqueda no realizar petición http
     if(query.isEmpty || query == '') return [];
@@ -136,14 +135,14 @@ class StockFinnhubDatasource extends StockDatasource{
     final stocksLookupResponse = StockLookupFinnhubResponse.fromJson(response.data);
     final pool = Pool(8);
 
-    List<StockLookup> stocksLookup = [];
+    List<Stock> stocksLookup = [];
     List<Future> futures = [];
 
     for(final stockLookup in stocksLookupResponse.result) {
       futures.add(pool.withResource(() async {
         final hasImage = await hasImageBySymbol(stockLookup.symbol);
         if(hasImage) {
-          stocksLookup.add(StockLookupMapper.stockLookupFinnhubToEntity(stockLookup));
+          stocksLookup.add(StockMapper.stockFinnhubToEntity(stockLookup));
         }
       }));
     }

@@ -1,8 +1,8 @@
-import 'package:stocks_app/infrastructure/models/stockfinnhub/stock_from_finnhub.dart';
+import 'package:stocks_app/infrastructure/models/stockfinnhub/stock_finnhub_response.dart';
 
 class StockLookupFinnhubResponse {
     final int count;
-    final List<StockFromFinnhub> result;
+    final List<StockFinnhubResponse> result;
 
     StockLookupFinnhubResponse({
         required this.count,
@@ -11,7 +11,7 @@ class StockLookupFinnhubResponse {
 
     factory StockLookupFinnhubResponse.fromJson(Map<String, dynamic> json) => StockLookupFinnhubResponse(
         count: json["count"],
-        result: List<StockFromFinnhub>.from(json["result"].map((x) => StockFromFinnhub.fromJson(x))),
+        result: List<StockFinnhubResponse>.from(json["result"].map((x) => StockFinnhubResponse.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {

@@ -6,7 +6,7 @@ import 'package:stocks_app/presentation/widgets/shared/add_stock_dialog.dart';
 
 class StockItemBySearch extends StatelessWidget {
   
-  final StockLookup stock;
+  final Stock stock;
   final Function onStockSelected;
 
 

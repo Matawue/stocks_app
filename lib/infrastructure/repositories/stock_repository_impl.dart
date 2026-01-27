@@ -32,7 +32,7 @@ class StockRepositoryImpl extends StockRepository{
   }
   
   @override
-  Future<List<StockLookup>> searchStocks(String query) {
+  Future<List<Stock>> searchStocks(String query) {
     return datasource.searchStocks(query);
   }
 

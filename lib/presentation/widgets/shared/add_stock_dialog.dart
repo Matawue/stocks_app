@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stocks_app/domain/entities/entities.dart';
 
 class AddStockDialog extends StatefulWidget {
-  final StockLookup stock;
+  final Stock stock;
   const AddStockDialog({super.key, required this.stock});
 
   @override

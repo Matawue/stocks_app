@@ -6,7 +6,7 @@ import 'package:stocks_app/presentation/providers/stocks/stocks_repository_provi
 
 final searchQueryProvider = StateProvider<String>((ref) => '');
 
-final searchedStocksProvider = StateNotifierProvider<SearchedStocksNotifier, List<StockLookup>>((ref) {
+final searchedStocksProvider = StateNotifierProvider<SearchedStocksNotifier, List<Stock>>((ref) {
   final stockRepository = ref.watch(stockRepositoryProvider);
   return SearchedStocksNotifier(
     searchStocks: stockRepository.searchStocks, 
@@ -15,9 +15,9 @@ final searchedStocksProvider = StateNotifierProvider<SearchedStocksNotifier, Lis
 });
 
 
-typedef SearchStocksCallback = Future<List<StockLookup>> Function(String query);
+typedef SearchStocksCallback = Future<List<Stock>> Function(String query);
 
-class SearchedStocksNotifier extends StateNotifier<List<StockLookup>>{
+class SearchedStocksNotifier extends StateNotifier<List<Stock>>{
   
   final SearchStocksCallback  searchStocks;
   final Ref ref;
@@ -27,7 +27,7 @@ class SearchedStocksNotifier extends StateNotifier<List<StockLookup>>{
     required this.ref
   }): super([]);
 
-  Future<List<StockLookup>> searchStocksByQuery(String query) async{
+  Future<List<Stock>> searchStocksByQuery(String query) async{
 
     ref.read(searchQueryProvider.notifier).update((state) => query);
     //if(query.isEmpty || query == '') {
@@ -35,7 +35,7 @@ class SearchedStocksNotifier extends StateNotifier<List<StockLookup>>{
     //  return [];
     //}
   
-    final List<StockLookup> stocks = await searchStocks(query);
+    final List<Stock> stocks = await searchStocks(query);
     
 
     state = stocks;
