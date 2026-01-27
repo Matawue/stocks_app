@@ -62,17 +62,18 @@ class StockFinnhubDatasource extends StockDatasource{
 
 
     final pool = Pool(10);
+    List<Future> futures = [];
 
 
     for(final stockFinnhub in stockResponse) {
-      pool.withResource(() async {
+      futures.add(pool.withResource(() async {
         final hasImage = await hasImageBySymbol(stockFinnhub.symbol);
         if(hasImage) {
           onStockFound(StockMapper.stockFinnhubToEntity(stockFinnhub));
         }
-      });
+      }));
     }
-    //final filteredStock = results.whereType<StockFinnhubResponse>();
+    await Future.wait(futures);
     await pool.close();
   
   }
@@ -133,18 +134,20 @@ class StockFinnhubDatasource extends StockDatasource{
 
     //TODO: capaz tambien deberia poner como entidad que sea un stock en vez de stocklookup y poner que pueden ser nulos los atributos que no posee el lookup
     final stocksLookupResponse = StockLookupFinnhubResponse.fromJson(response.data);
-    final pool = Pool(5);
+    final pool = Pool(8);
 
     List<StockLookup> stocksLookup = [];
+    List<Future> futures = [];
 
     for(final stockLookup in stocksLookupResponse.result) {
-      await pool.withResource(() async {
+      futures.add(pool.withResource(() async {
         final hasImage = await hasImageBySymbol(stockLookup.symbol);
         if(hasImage) {
           stocksLookup.add(StockLookupMapper.stockLookupFinnhubToEntity(stockLookup));
         }
-      });
+      }));
     }
+    await Future.wait(futures);
     await pool.close();
     return stocksLookup;
   }

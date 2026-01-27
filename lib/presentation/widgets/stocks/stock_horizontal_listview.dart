@@ -75,7 +75,7 @@ class _StockHorizontalListviewState extends State<StockHorizontalListview> {
   }
 }
 
-
+//TODO: poner mas info para justificar el hacer un toque mas ancho esto
 class _StocksSwipe extends StatelessWidget {
   final Stock stock;
   const _StocksSwipe({
@@ -90,7 +90,7 @@ class _StocksSwipe extends StatelessWidget {
       child: GestureDetector(
         onTap: () => context.push('/stock/${stock.symbol}'),
         child: Container(
-          width: 100,
+          width: 125,
           margin: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
           padding: EdgeInsets.symmetric(vertical: 15,),
           decoration: BoxDecoration(
@@ -110,8 +110,8 @@ class _StocksSwipe extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                width: 70,
-                height: 70,
+                width: 80,
+                height: 80,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   child: ClipOval(

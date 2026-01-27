@@ -15,9 +15,9 @@ class StockFinnhubResponse {
     });
 
     factory StockFinnhubResponse.fromJson(Map<String, dynamic> json) => StockFinnhubResponse(
-        currency: json["currency"],
+        currency: json["currency"] ?? '',
         description: json["description"],
-        mic: json["mic"],
+        mic: json["mic"] ?? '',
         symbol: json["symbol"],
         type: json["type"],
     );

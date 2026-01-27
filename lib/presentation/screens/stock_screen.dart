@@ -4,14 +4,14 @@ import 'package:stocks_app/domain/entities/entities.dart';
 import 'package:stocks_app/presentation/providers/stocks/stocks_repository_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
+//TODO: poner la logica en un archivo aparte
 final FutureProviderFamily<StockPrice, String> stockPriceFromProvider =
-FutureProviderFamily(( ref, String symbol ) async{
+FutureProviderFamily(( ref, String symbol ) {
   return ref.watch(stockRepositoryProvider).getStockPrice(symbol);
 });
 
 final FutureProviderFamily<StockInfo, String> stockInfoFromProvider =
-FutureProviderFamily(( ref, String symbol ) async{
+FutureProviderFamily(( ref, String symbol ) {
   return ref.watch(stockRepositoryProvider).getStockInfo(symbol);
 });
 
@@ -27,7 +27,7 @@ void openUrl(String url) async {
   if(canLaunch) {
     await launchUrl(uri, mode: LaunchMode.platformDefault);
   } else {
-    throw 'No se pudo abrir el enlace';
+    throw 'No se pudo abrir el enlace'; //TODO: manejar error con un snackbar
   }
 }
 

@@ -91,12 +91,15 @@ class SearchStockDelegate extends SearchDelegate<StockLookup?>{
         return (isLoading && query.isNotEmpty)
         ?Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: SingleChildScrollView(
+          child: const SingleChildScrollView(
             physics: NeverScrollableScrollPhysics(),
-            child: const Column(
+            child: Column(
               
               children: [
                 
+                LoadingStockBySearch(),
+                LoadingStockBySearch(),
+                LoadingStockBySearch(),
                 LoadingStockBySearch(),
                 LoadingStockBySearch(),
                 LoadingStockBySearch(),

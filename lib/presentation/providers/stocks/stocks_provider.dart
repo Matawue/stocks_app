@@ -2,13 +2,12 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stocks_app/domain/entities/entities.dart';
-import 'package:stocks_app/infrastructure/repositories/stock_repository_impl.dart';
 import 'package:stocks_app/presentation/providers/stocks/stocks_repository_provider.dart';
 
 
 
 final getStocksFromNYProvider = StateNotifierProvider<StocksNotifier, List<Stock>>((ref) {
-  final stocks = ref.watch(stockRepositoryProvider);
+  final stocks = ref.watch(stockRepositoryProvider).getStock;
   return StocksNotifier(
     stocks: stocks,
     marketIdentifierCode: 'XNYS'
@@ -17,7 +16,7 @@ final getStocksFromNYProvider = StateNotifierProvider<StocksNotifier, List<Stock
 });
 
 final getStocksFromNASProvider = StateNotifierProvider<StocksNotifier, List<Stock>>((ref) {
-  final stocks = ref.watch(stockRepositoryProvider);
+  final stocks = ref.watch(stockRepositoryProvider).getStock;
   return StocksNotifier(
     stocks: stocks,
     marketIdentifierCode: 'XNAS'
@@ -25,11 +24,12 @@ final getStocksFromNASProvider = StateNotifierProvider<StocksNotifier, List<Stoc
 
 });
 
+typedef StockCallback = Future<void> Function ({required String marketIdentifierCode, required void Function(Stock) onStockFound});
 
 class StocksNotifier extends StateNotifier<List<Stock>> {
   int currentPage = 0;
   bool isLoading = false;
-  final StockRepositoryImpl stocks;
+  final StockCallback stocks;
   final String marketIdentifierCode;
 
   final List<Stock> _allStocks = [];
@@ -42,7 +42,7 @@ class StocksNotifier extends StateNotifier<List<Stock>> {
 
   Future<void> loadStocksIncremental() async {
 
-    await stocks.getStock(
+    await stocks(
         marketIdentifierCode: marketIdentifierCode,
 
         // Función que me permite agregar uno a uno los stocks desde el datasource de Finnhub
@@ -55,7 +55,7 @@ class StocksNotifier extends StateNotifier<List<Stock>> {
           llama a loadNextPage para empezar a agregar stocks al estado
           
           */
-          if(_allStocks.length >= 20 && state.isEmpty) loadNextPage();
+          if(_allStocks.length >= 5 && state.isEmpty) loadNextPage();
         },
       );
   }
@@ -76,7 +76,7 @@ class StocksNotifier extends StateNotifier<List<Stock>> {
     ya que cada pagina tendra 10 elementos(stocks)
     
     */
-    int offset = currentPage*10;
+    int offset = currentPage*5;
 
     //creo tempStocksList para ir guardando aqui las acciones que luego agregare al state
     List<Stock> tempStocksList = [];
@@ -84,7 +84,7 @@ class StocksNotifier extends StateNotifier<List<Stock>> {
     //*pensando en poner el modulo de 10 de el length para contar
 
     // for para agregar 10 stocks dependiendo del desplazamiento del offset
-    for(int i = offset; i<offset+10 && i<_allStocks.length; i++){
+    for(int i = offset; i<offset+5 && i<_allStocks.length; i++){
       tempStocksList.add(_allStocks[i]);
     }
 
@@ -95,7 +95,7 @@ class StocksNotifier extends StateNotifier<List<Stock>> {
     state = [...state, ...tempStocksList];
 
     // Damos un tiempo de 2 segundos antes de que el isLoading sea false y nos permita cargar mas stocks
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 1));
     isLoading = false;
 
   }
