@@ -49,7 +49,7 @@ class SearchStockDelegate extends SearchDelegate<Stock?>{
     if(!isLoading) isLoading = true;
     if( _debounceTimer?.isActive ?? false) _debounceTimer!.cancel();
 
-    _debounceTimer = Timer(const Duration(seconds: 1), () async{
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () async{
       
       final stocks = await searchStocks(query);
       initialStocks = stocks;

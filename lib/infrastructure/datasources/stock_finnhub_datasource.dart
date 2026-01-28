@@ -21,10 +21,7 @@ class StockFinnhubDatasource extends StockDatasource{
   ));
 
   final dioImage = Dio(BaseOptions(
-    baseUrl: 'https://images.financialmodelingprep.com/symbol',
-    //validateStatus: (status) {
-    //  return status != null && status <= 500;
-    //},
+    baseUrl: 'https://images.financialmodelingprep.com/symbol'
   ));
 
   @override
@@ -60,7 +57,7 @@ class StockFinnhubDatasource extends StockDatasource{
     );
 
 
-    final pool = Pool(10);
+    final pool = Pool(5);
     List<Future> futures = [];
 
 
@@ -79,8 +76,6 @@ class StockFinnhubDatasource extends StockDatasource{
   
   @override
   Future<bool> hasImageBySymbol(String symbol) async{
-  
-
    try {
       final response = await dioImage.get('/$symbol.png');
       return response.statusCode == 200;
@@ -88,15 +83,6 @@ class StockFinnhubDatasource extends StockDatasource{
       if(e.response?.statusCode != 200) return false;
       rethrow; // otros errores, relanza la excepción
     }
-
-    
-    
-    //final response = await dioImage.get('/$symbol.png');
-    //if(response.statusCode==200) {
-    //  return true;
-    //} else {
-    //  return false;
-    //}
   }
   
   @override
@@ -133,7 +119,7 @@ class StockFinnhubDatasource extends StockDatasource{
 
     //TODO: capaz tambien deberia poner como entidad que sea un stock en vez de stocklookup y poner que pueden ser nulos los atributos que no posee el lookup
     final stocksLookupResponse = StockLookupFinnhubResponse.fromJson(response.data);
-    final pool = Pool(8);
+    final pool = Pool(15);
 
     List<Stock> stocksLookup = [];
     List<Future> futures = [];

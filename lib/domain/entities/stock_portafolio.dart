@@ -5,7 +5,7 @@ class StockPortafolio {
   final double currentPrice;
   final double previousClosePrice;
   final double amoutOfStock;
-  //TODO: hacer uno de a cual precio se invirtio en la accion
+  //TODO: hacer uno de a cual precio se invirtio en la accion(coste promedio)
 
   StockPortafolio({
     required this.name,
