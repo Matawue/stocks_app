@@ -45,16 +45,16 @@ class _StockHorizontalListviewState extends State<StockHorizontalListview> {
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).textTheme.bodyLarge;
     return SizedBox(
-      height: 220,
+      height: 240,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20,),
+          SizedBox(height: 15,),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Text(widget.title, style: textStyle,),
           ),
-          SizedBox(height: 15,),
+          SizedBox(height: 5,),
 
           
           Expanded(
@@ -84,7 +84,7 @@ class _StocksSwipe extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = Theme.of(context).textTheme.titleMedium;
+    final textStyle = Theme.of(context).textTheme;
     
     return FadeInRight(
       child: GestureDetector(
@@ -96,7 +96,7 @@ class _StocksSwipe extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             color: const Color.fromARGB(255, 245, 245, 245),
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
                 color: Colors.black26,
                 offset: Offset(0, 0),
@@ -110,10 +110,10 @@ class _StocksSwipe extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                width: 80,
-                height: 80,
+                width: 85,
+                height: 85,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                   child: ClipOval(
                     child: Image.network(
                       stock.image,
@@ -121,12 +121,20 @@ class _StocksSwipe extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 10,),
+              
+              SizedBox(height: 2,),
         
               SizedBox(
                 width: 70,
-                child: Center(child: Text(stock.symbol, style: textStyle!.copyWith(color: Colors.black54),)),
-              )
+                child: Center(child: Text(stock.symbol, style: textStyle.titleMedium!.copyWith(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),)),
+              ), 
+              
+              SizedBox(height: 5,), 
+              
+              SizedBox(
+                width: 70,
+                child: Text(stock.name, style: textStyle.bodySmall!.copyWith(color: Colors.black45, fontWeight: FontWeight.w500, fontSize: 11.5,), maxLines: 1, overflow: TextOverflow.ellipsis,),
+              ),
         
         
             ],

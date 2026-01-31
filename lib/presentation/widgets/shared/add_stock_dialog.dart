@@ -31,17 +31,13 @@ class _AddStockDialogState extends State<AddStockDialog> {
             Text(widget.stock.symbol, style: textStyle.titleSmall,),
 
             SizedBox(height: 10,),
-        
-           
 
             _TextFieldStock(textEditingController: _numberOfStockController, labelText: 'Numero de acciones', prefix: '',),
-
 
             SizedBox(height: 10,),
             
             _TextFieldStock(textEditingController: _priceOfStockController, labelText: 'Precio compra', prefix: '💲',),
 
-            
           ]
         ),
       ),
@@ -70,7 +66,6 @@ class _AddStockDialogState extends State<AddStockDialog> {
 
 class _TextFieldStock extends StatelessWidget {
   
-  
   final TextEditingController textEditingController;
   final String labelText;
   final String prefix;
@@ -85,7 +80,7 @@ class _TextFieldStock extends StatelessWidget {
       controller: textEditingController,
     
       decoration: InputDecoration(
-        labelText: 'Precio compra', 
+        labelText: labelText, 
         border: OutlineInputBorder(),
         prefix: Text(prefix),
         visualDensity: VisualDensity.compact

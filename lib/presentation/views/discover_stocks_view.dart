@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stocks_app/presentation/delegates/search_stock_delegate.dart';
 import 'package:stocks_app/presentation/providers/providers.dart';
 import 'package:stocks_app/presentation/widgets/stocks/stock_horizontal_listview.dart';
+import 'package:stocks_app/presentation/widgets/stocks/stocks_slideshow.dart';
 
 
 
@@ -67,20 +68,35 @@ class _DiscoverStocksViewState extends ConsumerState<DiscoverStocksView> {
       body: (stocksFromNY.isEmpty && stocksFromNAS.isEmpty)
       ? Center(child: CircularProgressIndicator(strokeWidth: 2,),)
 
-      :Column(
-        children: [
-          StockHorizontalListview(
-            stocks: stocksFromNY, 
-            title: 'New York stocks',
-            loadNextPage: () => ref.read(getStocksFromNYProvider.notifier).loadNextPage(),
-          ),
-
-          StockHorizontalListview(
-            stocks: stocksFromNAS, 
-            title: 'NASDAQ stocks',
-            loadNextPage: () => ref.read(getStocksFromNASProvider.notifier).loadNextPage(),
-          )
-        ],
+      :SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            
+            SizedBox(height: 15,),
+        
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Text('Las 7 Magníficas', style: TextStyle(fontSize: 18,),),
+            ),
+        
+            SizedBox(height: 10,),
+        
+            StocksSlideshow(),
+        
+            StockHorizontalListview(
+              stocks: stocksFromNY, 
+              title: 'Acciones de New York',
+              loadNextPage: () => ref.read(getStocksFromNYProvider.notifier).loadNextPage(),
+            ),
+        
+            StockHorizontalListview(
+              stocks: stocksFromNAS, 
+              title: 'Acciones de NASDAQ',
+              loadNextPage: () => ref.read(getStocksFromNASProvider.notifier).loadNextPage(),
+            )
+          ],
+        ),
       )
     );
   }

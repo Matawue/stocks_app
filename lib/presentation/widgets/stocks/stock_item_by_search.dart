@@ -52,8 +52,8 @@ class StockItemBySearch extends StatelessWidget {
         Nombre y simbolo del stock
 
         */
-        title: Text(stock.name, style: textStyle.bodyMedium!.copyWith(fontWeight: FontWeight.w500),),
-        subtitle: Text(stock.symbol, style: textStyle.bodySmall!.copyWith(color: Colors.black45, fontWeight: FontWeight.w500),),
+        title: Text(stock.symbol, style: textStyle.bodyMedium!.copyWith(fontWeight: FontWeight.w500),),
+        subtitle: Text(stock.name, style: textStyle.bodySmall!.copyWith(color: Colors.black45, fontWeight: FontWeight.w500, fontSize: 12.5),),
 
         //TODO: podria ser una funcionalidad para agregar el stock a tu portafolio
         trailing: IconButton(

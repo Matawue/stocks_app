@@ -55,7 +55,7 @@ class StocksNotifier extends StateNotifier<List<Stock>> {
           llama a loadNextPage para empezar a agregar stocks al estado
           
           */
-          if(_allStocks.length >= 5 && state.isEmpty) loadNextPage();
+          if(_allStocks.length >= 4 && state.isEmpty) loadNextPage();
         },
       );
   }
@@ -76,7 +76,7 @@ class StocksNotifier extends StateNotifier<List<Stock>> {
     ya que cada pagina tendra 10 elementos(stocks)
     
     */
-    int offset = currentPage*5;
+    int offset = currentPage*4;
 
     //creo tempStocksList para ir guardando aqui las acciones que luego agregare al state
     List<Stock> tempStocksList = [];
@@ -84,7 +84,7 @@ class StocksNotifier extends StateNotifier<List<Stock>> {
     //*pensando en poner el modulo de 10 de el length para contar
 
     // for para agregar 10 stocks dependiendo del desplazamiento del offset
-    for(int i = offset; i<offset+5 && i<_allStocks.length; i++){
+    for(int i = offset; i<offset+4 && i<_allStocks.length; i++){
       tempStocksList.add(_allStocks[i]);
     }
 
