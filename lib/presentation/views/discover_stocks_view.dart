@@ -86,13 +86,13 @@ class _DiscoverStocksViewState extends ConsumerState<DiscoverStocksView> {
         
             StockHorizontalListview(
               stocks: stocksFromNY, 
-              title: 'Acciones de New York',
+              title: 'Mercado NYSE',
               loadNextPage: () => ref.read(getStocksFromNYProvider.notifier).loadNextPage(),
             ),
         
             StockHorizontalListview(
               stocks: stocksFromNAS, 
-              title: 'Acciones de NASDAQ',
+              title: 'Mercado NASDAQ',
               loadNextPage: () => ref.read(getStocksFromNASProvider.notifier).loadNextPage(),
             )
           ],

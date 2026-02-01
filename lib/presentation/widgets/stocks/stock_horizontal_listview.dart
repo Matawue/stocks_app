@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:stocks_app/domain/entities/entities.dart';
+import 'package:stocks_app/presentation/widgets/shared/bouncy_card.dart';
 
 
 
@@ -75,7 +76,6 @@ class _StockHorizontalListviewState extends State<StockHorizontalListview> {
   }
 }
 
-//TODO: poner mas info para justificar el hacer un toque mas ancho esto
 class _StocksSwipe extends StatelessWidget {
   final Stock stock;
   const _StocksSwipe({
@@ -87,8 +87,8 @@ class _StocksSwipe extends StatelessWidget {
     final textStyle = Theme.of(context).textTheme;
     
     return FadeInRight(
-      child: GestureDetector(
-        onTap: () => context.push('/stock/${stock.symbol}'),
+      child: BouncyCard(
+        onPressed: () => context.push('/stock/${stock.symbol}'),
         child: Container(
           width: 125,
           margin: EdgeInsets.symmetric(horizontal: 8, vertical: 5),

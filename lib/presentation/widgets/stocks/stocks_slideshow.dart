@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:stocks_app/domain/entities/entities.dart';
 import 'package:stocks_app/presentation/screens/screens.dart';
+import 'package:stocks_app/presentation/widgets/shared/bouncy_card.dart';
 
 
 class StocksSlideshow extends StatelessWidget {
@@ -81,8 +82,8 @@ class _Slide extends ConsumerWidget {
     return Padding(
       padding: EdgeInsets.only(bottom: 30),
 
-      child: GestureDetector(
-        onTap: () => context.push('/stock/${stock.symbol}'),
+      child: BouncyCard(
+        onPressed: () => context.push('/stock/${stock.symbol}'),
         child: Stack(
           fit: StackFit.expand,
           children: [
